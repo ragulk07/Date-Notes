@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Date Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9eef2;--ink:#22303a;--muted:#64747f;--card:#fff;--line:#d3dce3;--accent:#2f6f8f;
+--n0:#ffe58a;--n1:#ffc2cf;--n2:#b8ecd0;--n3:#d6cbff;--n4:#ffd3a3;--noteink:#2b2b2b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161d22;--ink:#e6edf1;--muted:#8fa0ab;--card:#1f2830;--line:#33414b;--accent:#6bb7d9}}
+:root[data-theme="dark"]{--bg:#161d22;--ink:#e6edf1;--muted:#8fa0ab;--card:#1f2830;--line:#33414b;--accent:#6bb7d9}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:960px;margin:0 auto;padding:28px 18px 60px}
+header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:26px}
+h1{font:700 2.4rem/1 Caveat,cursive;margin:0}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.95rem}
+.add{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);padding:6px;border-radius:14px}
+input[type=date]{font:inherit;color:var(--ink);background:transparent;border:0;padding:8px;outline:0}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600}
+.btn:focus-visible,.note:focus-visible,.ghost:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px}
+.note{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;padding:18px;border-radius:3px 3px 3px 22px;color:var(--noteink);
+display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s}
+.note:hover{transform:rotate(0) translateY(-4px)!important}
+.note .day{font:700 3.4rem/1 Caveat,cursive}
+.note .mon{font:600 1.3rem/1 Caveat,cursive;margin-top:2px}
+.note .prev{margin-top:auto;font-size:.88rem;line-height:1.35;opacity:.8;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 10px;border:2px dashed var(--line);border-radius:16px}
+.page{display:none}
+.page.open{display:block}
+.ghost{background:none;border:0;color:var(--accent);font-weight:600;padding:6px 0;margin-bottom:14px}
+.sheet{border-radius:6px 6px 6px 28px;padding:26px;min-height:60vh;color:var(--noteink);box-shadow:0 14px 28px -14px rgba(0,0,0,.4)}
+.sheet h2{font:700 2.6rem/1 Caveat,cursive;margin:0 0 4px}
+.sheet .wk{margin:0 0 16px;opacity:.7}
+textarea{width:100%;min-height:42vh;border:0;background:transparent;resize:vertical;font:1.15rem/1.7 Figtree,sans-serif;color:inherit;outline:0;
+background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1.7em calc(1.7em + 1px))}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:.9rem}
+.colors{display:flex;gap:8px}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,.25);padding:0}
+.dot[aria-pressed=true]{border-color:#000;box-shadow:0 0 0 2px #fff}
+.del{background:none;border:0;color:#a02828;font-weight:600}
+
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.tools input[type=search]{flex:1;min-width:160px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;outline:0}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--muted);padding:8px 14px;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--accent);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:3px 12px;font-size:.85rem}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.banner{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:none}
+.note{position:relative}
+.badge{position:absolute;top:10px;right:12px;font-size:.78rem;font-weight:600;background:rgba(0,0,0,.14);border-radius:99px;padding:1px 9px}
+.ntitle{font-weight:600;margin-top:auto;font-size:.95rem}
+.ntitle+.prev{margin-top:2px}
+.tg{font-size:.78rem;opacity:.75;margin-top:4px}
+.cal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.calhead h2{font:700 1.9rem/1 Caveat,cursive;margin:0}
+.calhead button{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:4px 12px}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.grid7 .wd{text-align:center;color:var(--muted);font-size:.8rem}
+.cd{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;padding:10px 0;border-radius:10px;position:relative;min-height:48px}
+.cd:hover{background:var(--bg)}.cd:focus-visible{outline:3px solid var(--accent)}
+.cd.t{outline:2px solid var(--accent)}
+.cd i{display:block;width:8px;height:8px;border-radius:50%;margin:3px auto 0}
+.fields{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.fields input{flex:1;min-width:140px;font:inherit;color:inherit;background:rgba(255,255,255,.45);border:0;border-radius:8px;padding:8px 10px;outline:0}
+.pinb{background:rgba(255,255,255,.55);border:0;border-radius:8px;padding:8px 12px;font-weight:600;color:var(--noteink)}
+.count{opacity:.7}
+.quote{display:flex;gap:14px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:16px}
+.quote p{margin:0;font:700 1.55rem/1.2 Caveat,cursive;max-width:70ch}
+.quote button{flex:none;background:none;border:1px solid var(--line);color:var(--accent);border-radius:10px;padding:6px 12px;font-weight:600}
+.quote button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#lock{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
+.lc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.lc h2{font:700 2.2rem/1 Caveat,cursive;margin:0}
+.lc p{margin:0;color:var(--muted);font-size:.92rem}
+.lc input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:0}
+.lc input:focus-visible{outline:3px solid var(--accent)}
+.lm{color:#c0392b;min-height:1.3em;font-size:.9rem}
+.lk{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;padding:0;text-align:left}
+</style>
+</head>
+<body>
+<div id="lock"><div class="lc"><h2 id="ltitle"></h2><p id="lhint"></p>
+ <input type="password" id="pw" placeholder="Password" autocomplete="off" aria-label="Password">
+ <input type="password" id="pw2" placeholder="Repeat password" autocomplete="off" aria-label="Repeat password">
+ <div class="lm" id="lmsg" role="alert"></div><button class="btn" id="lgo"></button>
+ <button class="lk" id="lreset">Forgot password? Erase all notes</button></div></div>
+<div class="wrap" id="app" hidden>
+ <section class="page open" id="home">
+  <header>
+   <div><h1>Date Notes</h1><p class="sub">Stick a date on the board. Click it to write.</p></div>
+   <div class="add"><label class="sub" for="d" style="margin:0 0 0 8px">Date</label><input type="date" id="d"><button class="btn" id="addBtn">Add note</button></div>
+  </header>
+  <div class="quote"><p id="qt" aria-live="polite"></p><button id="qn">New quote</button></div>
+  <div class="banner" id="banner"></div>
+  <div class="tools"><input type="search" id="q" placeholder="Search notes, titles or tags" aria-label="Search notes">
+   <div class="seg"><button id="vb" aria-pressed="true">Board</button><button id="vc" aria-pressed="false">Calendar</button></div>
+   <button class="chip" id="theme">Dark / light</button><button class="chip" id="lockBtn">Lock</button></div>
+  <div class="chips" id="chips"></div>
+  <div class="board" id="board"></div>
+  <div class="cal" id="cal" style="display:none"><div class="calhead"><button id="pm" aria-label="Previous month">&larr;</button><h2 id="cmt"></h2><button id="nm" aria-label="Next month">&rarr;</button></div><div class="grid7" id="g7"></div></div>
+ </section>
+ <section class="page" id="detail">
+  <button class="ghost" id="back">&larr; Back to board</button>
+  <div class="sheet" id="sheet">
+   <h2 id="title"></h2><p class="wk" id="wk"></p>
+   <div class="fields"><input id="ntitle" placeholder="Title (optional)" aria-label="Title"><input id="ntags" placeholder="Tags, separated by commas" aria-label="Tags"><button class="pinb" id="pin" aria-pressed="false">Pin note</button></div>
+   <textarea id="text" placeholder="Write anything about this day..."></textarea>
+   <div class="bar"><div class="colors" id="colors" role="group" aria-label="Note color"></div><span id="saved" class="count"></span><button class="del" id="del">Delete note</button></div>
+  </div>
+ </section>
+</div>
+<script>
+const KEY="date-notes-v1";let notes=[],cur=null,q="",tag="",cm=new Date();cm.setDate(1);
+const VK="date-notes-vault";let ck=null,salt=null,chain=Promise.resolve();
+const normalize=n=>{n.title=n.title||"";n.tags=n.tags||[];n.pinned=!!n.pinned};
+const b64=u=>{let s="";new Uint8Array(u).forEach(c=>s+=String.fromCharCode(c));return btoa(s)};
+const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function derive(pw,sl){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt:sl,iterations:250000,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function enc(){if(!ck)return;const iv=crypto.getRandomValues(new Uint8Array(12));
+ const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},ck,new TextEncoder().encode(JSON.stringify(notes)));
+ try{localStorage.setItem(VK,JSON.stringify({s:b64(salt),i:b64(iv),d:b64(ct)}))}catch(e){}}
+const save=()=>{chain=chain.then(enc)};
+const $=id=>document.getElementById(id);
+const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const col=i=>`var(--n${i})`;
+$("d").value=iso(new Date());
+function make(v){let n=notes.find(x=>x.date===v);if(n){open(n.id);return}
+ n={id:Date.now(),date:v,text:"",title:"",tags:[],pinned:false,color:notes.length%5};notes.push(n);save();render();open(n.id)}
+function render(){
+ const t=iso(new Date()),b=$("board");b.innerHTML="";
+ const tags=[...new Set(notes.flatMap(n=>n.tags))];
+ if(tag&&!tags.includes(tag))tag="";
+ $("chips").innerHTML="";
+ if(tags.length)["",...tags].forEach(x=>{const c=document.createElement("button");c.className="chip";c.textContent=x||"All";c.setAttribute("aria-pressed",tag===x);c.onclick=()=>{tag=x;render()};$("chips").appendChild(c)});
+ const soon=notes.filter(n=>n.date>=t&&n.date<=iso(new Date(Date.now()+6*864e5)));
+ const tn=notes.find(n=>n.date===t),bn=$("banner");
+ bn.style.display=soon.length?"block":"none";
+ bn.textContent=tn?`You have a note for today${soon.length>1?` and ${soon.length-1} more this week`:""}.`:`${soon.length} note${soon.length>1?"s":""} coming up in the next 7 days.`;
+ const list=notes.filter(n=>(!tag||n.tags.includes(tag))&&(n.title+" "+n.text+" "+n.tags.join(" ")).toLowerCase().includes(q))
+  .sort((a,b)=>(b.pinned-a.pinned)||a.date.localeCompare(b.date));
+ if(!list.length)b.innerHTML=`<div class="empty">${notes.length?"No notes match your search.":"No notes yet. Pick a date above and press Add note."}</div>`;
+ list.forEach((n,i)=>{
+  const dt=parse(n.date),el=document.createElement("button");
+  el.className="note";el.style.background=col(n.color);
+  el.style.transform=`rotate(${[-2,1.5,-1,2,-1.5][i%5]}deg)`;
+  el.innerHTML=`<span class="day">${dt.getDate()}</span><span class="mon">${dt.toLocaleString("en",{month:"long"})} ${dt.getFullYear()}</span>`+
+   `${n.date===t||n.pinned?'<span class="badge">'+(n.pinned?"Pinned":"")+(n.pinned&&n.date===t?" · ":"")+(n.date===t?"Today":"")+'</span>':""}`+
+   `<span class="ntitle"></span><span class="prev"></span><span class="tg"></span>`;
+  el.querySelector(".ntitle").textContent=n.title;
+  el.querySelector(".prev").textContent=n.text||(n.title?"":"Empty note");
+  el.querySelector(".tg").textContent=n.tags.map(x=>"#"+x).join(" ");
+  if(!n.title)el.querySelector(".ntitle").remove();
+  el.onclick=()=>open(n.id);b.appendChild(el)});
+ renderCal()}
+function renderCal(){
+ const y=cm.getFullYear(),m=cm.getMonth(),g=$("g7"),t=iso(new Date());
+ $("cmt").textContent=cm.toLocaleString("en",{month:"long",year:"numeric"});g.innerHTML="";
+ "SMTWTFS".split("").forEach(d=>{const w=document.createElement("div");w.className="wd";w.textContent=d;g.appendChild(w)});
+ for(let i=0;i<new Date(y,m,1).getDay();i++)g.appendChild(document.createElement("div"));
+ for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
+  const v=iso(new Date(y,m,d)),n=notes.find(x=>x.date===v),c=document.createElement("button");
+  c.className="cd"+(v===t?" t":"");c.textContent=d;c.setAttribute("aria-label",v+(n?" has a note":""));
+  if(n){const i=document.createElement("i");i.style.background=col(n.color);c.appendChild(i)}
+  c.onclick=()=>make(v);g.appendChild(c)}}
+function setView(v){const c=v==="cal";$("board").style.display=c?"none":"";$("chips").style.display=c?"none":"";$("cal").style.display=c?"":"none";
+ $("vb").setAttribute("aria-pressed",!c);$("vc").setAttribute("aria-pressed",c)}
+function open(id){
+ cur=notes.find(n=>n.id===id);if(!cur)return;
+ const dt=parse(cur.date);
+ $("title").textContent=dt.toLocaleDateString("en",{day:"numeric",month:"long",year:"numeric"});
+ $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
+ $("text").value=cur.text;$("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
+ $("home").classList.remove("open");$("detail").classList.add("open");$("text").focus();window.scrollTo(0,0)}
+function stat(msg){const w=cur.text.trim()?cur.text.trim().split(/\s+/).length:0;$("saved").textContent=(msg||"")+(msg?" · ":"")+w+" words"}
+function paint(){
+ $("sheet").style.background=col(cur.color);
+ $("pin").setAttribute("aria-pressed",cur.pinned);$("pin").textContent=cur.pinned?"Unpin note":"Pin note";
+ $("colors").innerHTML="";
+ for(let i=0;i<5;i++){const d=document.createElement("button");d.className="dot";d.style.background=col(i);
+  d.setAttribute("aria-label","Color "+(i+1));d.setAttribute("aria-pressed",cur.color===i);
+  d.onclick=()=>{cur.color=i;save();paint()};$("colors").appendChild(d)}}
+$("addBtn").onclick=()=>{const v=$("d").value;if(v)make(v)};
+$("text").oninput=e=>{cur.text=e.target.value;save();stat("Saved")};
+$("ntitle").oninput=e=>{cur.title=e.target.value;save();stat("Saved")};
+$("ntags").oninput=e=>{cur.tags=[...new Set(e.target.value.split(",").map(x=>x.trim().replace(/^#/,"").toLowerCase()).filter(Boolean))];save();stat("Saved")};
+$("pin").onclick=()=>{cur.pinned=!cur.pinned;save();paint()};
+$("q").oninput=e=>{q=e.target.value.toLowerCase();setView("board");render()};
+$("vb").onclick=()=>setView("board");$("vc").onclick=()=>setView("cal");
+$("pm").onclick=()=>{cm.setMonth(cm.getMonth()-1);renderCal()};$("nm").onclick=()=>{cm.setMonth(cm.getMonth()+1);renderCal()};
+$("theme").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+$("back").onclick=()=>{$("detail").classList.remove("open");$("home").classList.add("open");render()};
+$("del").onclick=()=>{if(confirm("Delete this note?")){notes=notes.filter(n=>n.id!==cur.id);save();$("back").click()}};
+const QUOTES=["Small steps today beat perfect plans tomorrow.","Start where you are. Use what you have. Do what you can.","One focused hour can change your whole day.","You don't have to be fast. You just have to keep going.","Write it down, then make it happen.","Progress is quiet. Keep showing up.","Today is a good day to begin.","Done is better than perfect.","Every big thing started as a small note.","Be proud of how far you've come.","Your future self is counting on today.","Slow progress is still progress.","Make today count, one task at a time.","Mistakes mean you're trying. Try again.","Dream big, plan small, start now.","Discipline is a gift you give your future self.","You are more capable than you think.","Choose the next small action, then take it.","Rest if you must, but don't quit.","Good things take time. Keep building."];
+let qi=Math.floor(Date.now()/864e5)%QUOTES.length;
+const showQ=()=>{$("qt").textContent="\u201C"+QUOTES[qi]+"\u201D"};
+$("qn").onclick=()=>{qi=(qi+1)%QUOTES.length;showQ()};
+showQ();
+const readVault=()=>{try{return JSON.parse(localStorage.getItem(VK))}catch(e){return null}};
+let vault=readVault(),idle=null;
+function setupUI(){const f=!vault;$("ltitle").textContent=f?"Set a password":"Notes are locked";
+ $("lhint").textContent=f?"Your notes are encrypted with this password in this browser. It can't be recovered if you forget it.":"Enter your password to open your notes.";
+ $("pw2").style.display=f?"":"none";$("lgo").textContent=f?"Set password and open":"Unlock";$("lreset").style.display=f?"none":""}
+function resetIdle(){clearTimeout(idle);if(ck)idle=setTimeout(lock,5*60*1000)}
+function lock(){chain.then(()=>{ck=null;notes=[];cur=null;clearTimeout(idle);$("text").value="";$("board").innerHTML="";
+ $("detail").classList.remove("open");$("home").classList.add("open");$("app").hidden=true;
+ vault=readVault();setupUI();$("lock").style.display="flex";$("pw").focus()})}
+async function go(){
+ const p=$("pw").value,m=$("lmsg");m.textContent="";
+ try{
+  if(!vault){
+   if(p.length<6){m.textContent="Use at least 6 characters.";return}
+   if(p!==$("pw2").value){m.textContent="The passwords don't match.";return}
+   salt=crypto.getRandomValues(new Uint8Array(16));ck=await derive(p,salt);
+   try{notes=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){notes=[]}
+   await enc();try{localStorage.removeItem(KEY)}catch(e){}
+  }else{
+   salt=unb(vault.s);const k=await derive(p,salt);
+   const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb(vault.i)},k,unb(vault.d));
+   notes=JSON.parse(new TextDecoder().decode(pt));ck=k}
+ }catch(e){ck=null;m.textContent="Wrong password. Try again.";return}
+ notes.forEach(normalize);$("pw").value=$("pw2").value="";
+ $("lock").style.display="none";$("app").hidden=false;render();resetIdle()}
+$("lgo").onclick=go;
+[$("pw"),$("pw2")].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")go()}));
+$("lockBtn").onclick=lock;
+$("lreset").onclick=()=>{if(confirm("This permanently erases all notes on this device. Continue?")){try{localStorage.removeItem(VK);localStorage.removeItem(KEY)}catch(e){}vault=null;setupUI();$("lmsg").textContent=""}};
+["keydown","pointerdown"].forEach(ev=>document.addEventListener(ev,resetIdle));
+setupUI();
+</script>
+</body>
+</html>
