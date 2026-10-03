@@ -21,8 +21,8 @@ h1{font:700 2.4rem/1 Caveat,cursive;margin:0}
 .add{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);padding:6px;border-radius:14px}
 input[type=date]{font:inherit;color:var(--ink);background:transparent;border:0;padding:8px;outline:0}
 button{font:inherit;cursor:pointer}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600}
-.btn:focus-visible,.note:focus-visible,.ghost:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px}
 .note{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;padding:18px;border-radius:3px 3px 3px 22px;color:var(--noteink);
 display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s}
@@ -51,7 +51,7 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .seg button{background:none;border:0;color:var(--muted);padding:8px 14px;font-weight:600}
 .seg button[aria-pressed=true]{background:var(--accent);color:#fff}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
-.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:3px 12px;font-size:.85rem}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:4px 12px;font-size:.85rem;cursor:pointer}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--bg)}
 .banner{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:none}
 .note{position:relative}
@@ -78,21 +78,32 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .quote button{flex:none;background:none;border:1px solid var(--line);color:var(--accent);border-radius:10px;padding:6px 12px;font-weight:600}
 .quote button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 #lock{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
-.lc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.lc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;width:100%;max-width:390px;display:flex;flex-direction:column;gap:12px}
 .lc h2{font:700 2.2rem/1 Caveat,cursive;margin:0}
 .lc p{margin:0;color:var(--muted);font-size:.92rem}
-.lc input{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:0}
+.lc input[type=text],.lc input[type=password]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:0}
 .lc input:focus-visible{outline:3px solid var(--accent)}
 .lm{color:#c0392b;min-height:1.3em;font-size:.9rem}
-.lk{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;padding:0;text-align:left}
+.lk{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;padding:0;text-align:left;cursor:pointer}
+.modal{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:20px;backdrop-filter:blur(3px)}
+.modal.open{display:flex}
+.sync-badge{font-size:.78rem;color:var(--muted);margin-left:6px;font-weight:normal}
 </style>
 </head>
 <body>
-<div id="lock"><div class="lc"><h2 id="ltitle"></h2><p id="lhint"></p>
- <input type="password" id="pw" placeholder="Password" autocomplete="off" aria-label="Password">
- <input type="password" id="pw2" placeholder="Repeat password" autocomplete="off" aria-label="Repeat password">
- <div class="lm" id="lmsg" role="alert"></div><button class="btn" id="lgo"></button>
- <button class="lk" id="lreset">Forgot password? Erase all notes</button></div></div>
+<div id="lock">
+ <div class="lc">
+  <h2 id="ltitle"></h2>
+  <p id="lhint"></p>
+  <input type="password" id="pw" placeholder="Password" autocomplete="off" aria-label="Password">
+  <input type="password" id="pw2" placeholder="Repeat password" autocomplete="off" aria-label="Repeat password">
+  <div class="lm" id="lmsg" role="alert"></div>
+  <button class="btn" id="lgo"></button>
+  <button class="lk" id="lrestore" type="button">📥 Restore vault from GitHub Gist</button>
+  <button class="lk" id="lreset" type="button">Forgot password? Erase all notes</button>
+ </div>
+</div>
+
 <div class="wrap" id="app" hidden>
  <section class="page open" id="home">
   <header>
@@ -101,9 +112,13 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
   </header>
   <div class="quote"><p id="qt" aria-live="polite"></p><button id="qn">New quote</button></div>
   <div class="banner" id="banner"></div>
-  <div class="tools"><input type="search" id="q" placeholder="Search notes, titles or tags" aria-label="Search notes">
+  <div class="tools">
+   <input type="search" id="q" placeholder="Search notes, titles or tags" aria-label="Search notes">
    <div class="seg"><button id="vb" aria-pressed="true">Board</button><button id="vc" aria-pressed="false">Calendar</button></div>
-   <button class="chip" id="theme">Dark / light</button><button class="chip" id="lockBtn">Lock</button></div>
+   <button class="chip" id="syncBtn" title="GitHub Gist Cloud Sync">☁️ Cloud Sync<span id="syncIndicator" class="sync-badge"></span></button>
+   <button class="chip" id="theme">Dark / light</button>
+   <button class="chip" id="lockBtn">Lock</button>
+  </div>
   <div class="chips" id="chips"></div>
   <div class="board" id="board"></div>
   <div class="cal" id="cal" style="display:none"><div class="calhead"><button id="pm" aria-label="Previous month">&larr;</button><h2 id="cmt"></h2><button id="nm" aria-label="Next month">&rarr;</button></div><div class="grid7" id="g7"></div></div>
@@ -118,32 +133,86 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
   </div>
  </section>
 </div>
+
+<!-- GitHub Gist Cloud Sync Modal -->
+<div class="modal" id="syncModal" role="dialog" aria-modal="true" aria-labelledby="ghTitle">
+ <div class="lc" style="max-width:440px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+   <h2 id="ghTitle" style="margin:0">GitHub Cloud Sync ☁️</h2>
+   <button id="ghClose" style="background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--muted);line-height:1;padding:0" aria-label="Close modal">&times;</button>
+  </div>
+  <p style="margin:0;color:var(--muted);font-size:.88rem">Backup & sync your encrypted vault across devices using a private GitHub Gist.</p>
+  
+  <label class="sub" for="ghToken" style="font-weight:600;font-size:.85rem;color:var(--ink)">GitHub Personal Access Token (PAT):</label>
+  <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+  <p style="margin:-6px 0 2px;font-size:.78rem;color:var(--muted)">Generate a classic token on <a href="https://github.com/settings/tokens" target="_blank" rel="noopener" style="color:var(--accent)">GitHub Settings &rarr; Tokens</a> with <code>gist</code> permission.</p>
+  
+  <label class="sub" for="ghGistId" style="font-weight:600;font-size:.85rem;color:var(--ink)">Gist ID (optional):</label>
+  <input type="text" id="ghGistId" placeholder="Leave blank to create a new Gist" spellcheck="false">
+  
+  <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;cursor:pointer">
+   <input type="checkbox" id="ghAuto" checked style="width:auto"> Auto-sync when saving notes
+  </label>
+  
+  <div class="lm" id="ghMsg" role="alert"></div>
+  
+  <div style="display:flex;gap:8px">
+   <button class="btn" id="ghPush" style="flex:1">Push to GitHub</button>
+   <button class="btn" id="ghPull" style="flex:1;background:var(--muted)">Pull from GitHub</button>
+  </div>
+  
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px">
+   <span id="ghStatus" style="font-size:.8rem;color:var(--muted)"></span>
+   <button class="lk" id="ghClear" style="color:#c0392b">Disconnect</button>
+  </div>
+  
+  <p style="font-size:.75rem;color:var(--muted);margin:8px 0 0;line-height:1.35;border-top:1px solid var(--line);padding-top:8px">
+   🔒 <b>Zero-Knowledge Security:</b> Notes are encrypted with your password <i>before</i> uploading. GitHub stores only encrypted ciphertext.
+  </p>
+ </div>
+</div>
+
 <script>
 const KEY="date-notes-v1";let notes=[],cur=null,q="",tag="",cm=new Date();cm.setDate(1);
-const VK="date-notes-vault";let ck=null,salt=null,chain=Promise.resolve();
+const VK="date-notes-vault";const GK="date-notes-gist-cfg";
+let ck=null,salt=null,chain=Promise.resolve();
 const normalize=n=>{n.title=n.title||"";n.tags=n.tags||[];n.pinned=!!n.pinned};
 const b64=u=>{let s="";new Uint8Array(u).forEach(c=>s+=String.fromCharCode(c));return btoa(s)};
 const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function derive(pw,sl){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
  return crypto.subtle.deriveKey({name:"PBKDF2",salt:sl,iterations:250000,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+
 async function enc(){if(!ck)return;const iv=crypto.getRandomValues(new Uint8Array(12));
  const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},ck,new TextEncoder().encode(JSON.stringify(notes)));
  try{localStorage.setItem(VK,JSON.stringify({s:b64(salt),i:b64(iv),d:b64(ct)}))}catch(e){}}
-const save=()=>{chain=chain.then(enc)};
+
+const save=()=>{chain=chain.then(enc).then(triggerAutoSync)};
+let saveDebounceTimer=null;
+const debouncedSave=msg=>{
+ stat("Saving...");
+ clearTimeout(saveDebounceTimer);
+ saveDebounceTimer=setTimeout(()=>{save();stat(msg||"Saved")},350);
+};
+
+window.addEventListener("beforeunload",()=>{if(saveDebounceTimer){clearTimeout(saveDebounceTimer);enc()}});
+
 const $=id=>document.getElementById(id);
 const parse=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
 const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 const col=i=>`var(--n${i})`;
 $("d").value=iso(new Date());
+
 function make(v){let n=notes.find(x=>x.date===v);if(n){open(n.id);return}
  n={id:Date.now(),date:v,text:"",title:"",tags:[],pinned:false,color:notes.length%5};notes.push(n);save();render();open(n.id)}
+
 function render(){
  const t=iso(new Date()),b=$("board");b.innerHTML="";
  const tags=[...new Set(notes.flatMap(n=>n.tags))];
  if(tag&&!tags.includes(tag))tag="";
  $("chips").innerHTML="";
  if(tags.length)["",...tags].forEach(x=>{const c=document.createElement("button");c.className="chip";c.textContent=x||"All";c.setAttribute("aria-pressed",tag===x);c.onclick=()=>{tag=x;render()};$("chips").appendChild(c)});
- const soon=notes.filter(n=>n.date>=t&&n.date<=iso(new Date(Date.now()+6*864e5)));
+ const nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+6);
+ const soon=notes.filter(n=>n.date>=t&&n.date<=iso(nextWeek));
  const tn=notes.find(n=>n.date===t),bn=$("banner");
  bn.style.display=soon.length?"block":"none";
  bn.textContent=tn?`You have a note for today${soon.length>1?` and ${soon.length-1} more this week`:""}.`:`${soon.length} note${soon.length>1?"s":""} coming up in the next 7 days.`;
@@ -163,6 +232,7 @@ function render(){
   if(!n.title)el.querySelector(".ntitle").remove();
   el.onclick=()=>open(n.id);b.appendChild(el)});
  renderCal()}
+
 function renderCal(){
  const y=cm.getFullYear(),m=cm.getMonth(),g=$("g7"),t=iso(new Date());
  $("cmt").textContent=cm.toLocaleString("en",{month:"long",year:"numeric"});g.innerHTML="";
@@ -173,8 +243,10 @@ function renderCal(){
   c.className="cd"+(v===t?" t":"");c.textContent=d;c.setAttribute("aria-label",v+(n?" has a note":""));
   if(n){const i=document.createElement("i");i.style.background=col(n.color);c.appendChild(i)}
   c.onclick=()=>make(v);g.appendChild(c)}}
+
 function setView(v){const c=v==="cal";$("board").style.display=c?"none":"";$("chips").style.display=c?"none":"";$("cal").style.display=c?"":"none";
  $("vb").setAttribute("aria-pressed",!c);$("vc").setAttribute("aria-pressed",c)}
+
 function open(id){
  cur=notes.find(n=>n.id===id);if(!cur)return;
  const dt=parse(cur.date);
@@ -182,7 +254,9 @@ function open(id){
  $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
  $("text").value=cur.text;$("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
  $("home").classList.remove("open");$("detail").classList.add("open");$("text").focus();window.scrollTo(0,0)}
+
 function stat(msg){const w=cur.text.trim()?cur.text.trim().split(/\s+/).length:0;$("saved").textContent=(msg||"")+(msg?" · ":"")+w+" words"}
+
 function paint(){
  $("sheet").style.background=col(cur.color);
  $("pin").setAttribute("aria-pressed",cur.pinned);$("pin").textContent=cur.pinned?"Unpin note":"Pin note";
@@ -190,10 +264,11 @@ function paint(){
  for(let i=0;i<5;i++){const d=document.createElement("button");d.className="dot";d.style.background=col(i);
   d.setAttribute("aria-label","Color "+(i+1));d.setAttribute("aria-pressed",cur.color===i);
   d.onclick=()=>{cur.color=i;save();paint()};$("colors").appendChild(d)}}
+
 $("addBtn").onclick=()=>{const v=$("d").value;if(v)make(v)};
-$("text").oninput=e=>{cur.text=e.target.value;save();stat("Saved")};
-$("ntitle").oninput=e=>{cur.title=e.target.value;save();stat("Saved")};
-$("ntags").oninput=e=>{cur.tags=[...new Set(e.target.value.split(",").map(x=>x.trim().replace(/^#/,"").toLowerCase()).filter(Boolean))];save();stat("Saved")};
+$("text").oninput=e=>{cur.text=e.target.value;debouncedSave()};
+$("ntitle").oninput=e=>{cur.title=e.target.value;debouncedSave()};
+$("ntags").oninput=e=>{cur.tags=[...new Set(e.target.value.split(",").map(x=>x.trim().replace(/^#/,"").toLowerCase()).filter(Boolean))];debouncedSave()};
 $("pin").onclick=()=>{cur.pinned=!cur.pinned;save();paint()};
 $("q").oninput=e=>{q=e.target.value.toLowerCase();setView("board");render()};
 $("vb").onclick=()=>setView("board");$("vc").onclick=()=>setView("cal");
@@ -201,20 +276,25 @@ $("pm").onclick=()=>{cm.setMonth(cm.getMonth()-1);renderCal()};$("nm").onclick=(
 $("theme").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
 $("back").onclick=()=>{$("detail").classList.remove("open");$("home").classList.add("open");render()};
 $("del").onclick=()=>{if(confirm("Delete this note?")){notes=notes.filter(n=>n.id!==cur.id);save();$("back").click()}};
+
 const QUOTES=["Small steps today beat perfect plans tomorrow.","Start where you are. Use what you have. Do what you can.","One focused hour can change your whole day.","You don't have to be fast. You just have to keep going.","Write it down, then make it happen.","Progress is quiet. Keep showing up.","Today is a good day to begin.","Done is better than perfect.","Every big thing started as a small note.","Be proud of how far you've come.","Your future self is counting on today.","Slow progress is still progress.","Make today count, one task at a time.","Mistakes mean you're trying. Try again.","Dream big, plan small, start now.","Discipline is a gift you give your future self.","You are more capable than you think.","Choose the next small action, then take it.","Rest if you must, but don't quit.","Good things take time. Keep building."];
 let qi=Math.floor(Date.now()/864e5)%QUOTES.length;
 const showQ=()=>{$("qt").textContent="\u201C"+QUOTES[qi]+"\u201D"};
 $("qn").onclick=()=>{qi=(qi+1)%QUOTES.length;showQ()};
 showQ();
+
 const readVault=()=>{try{return JSON.parse(localStorage.getItem(VK))}catch(e){return null}};
 let vault=readVault(),idle=null;
 function setupUI(){const f=!vault;$("ltitle").textContent=f?"Set a password":"Notes are locked";
  $("lhint").textContent=f?"Your notes are encrypted with this password in this browser. It can't be recovered if you forget it.":"Enter your password to open your notes.";
  $("pw2").style.display=f?"":"none";$("lgo").textContent=f?"Set password and open":"Unlock";$("lreset").style.display=f?"none":""}
+
 function resetIdle(){clearTimeout(idle);if(ck)idle=setTimeout(lock,5*60*1000)}
-function lock(){chain.then(()=>{ck=null;notes=[];cur=null;clearTimeout(idle);$("text").value="";$("board").innerHTML="";
- $("detail").classList.remove("open");$("home").classList.add("open");$("app").hidden=true;
+
+function lock(){chain.then(()=>{ck=null;notes=[];cur=null;clearTimeout(idle);clearTimeout(saveDebounceTimer);
+ $("text").value="";$("board").innerHTML="";$("detail").classList.remove("open");$("home").classList.add("open");$("app").hidden=true;
  vault=readVault();setupUI();$("lock").style.display="flex";$("pw").focus()})}
+
 async function go(){
  const p=$("pw").value,m=$("lmsg");m.textContent="";
  try{
@@ -230,13 +310,137 @@ async function go(){
    notes=JSON.parse(new TextDecoder().decode(pt));ck=k}
  }catch(e){ck=null;m.textContent="Wrong password. Try again.";return}
  notes.forEach(normalize);$("pw").value=$("pw2").value="";
- $("lock").style.display="none";$("app").hidden=false;render();resetIdle()}
+ $("lock").style.display="none";$("app").hidden=false;render();resetIdle();initGistUI()}
+
 $("lgo").onclick=go;
 [$("pw"),$("pw2")].forEach(i=>i.addEventListener("keydown",e=>{if(e.key==="Enter")go()}));
 $("lockBtn").onclick=lock;
-$("lreset").onclick=()=>{if(confirm("This permanently erases all notes on this device. Continue?")){try{localStorage.removeItem(VK);localStorage.removeItem(KEY)}catch(e){}vault=null;setupUI();$("lmsg").textContent=""}};
+$("lreset").onclick=()=>{if(confirm("This permanently erases all notes on this device. Continue?")){try{localStorage.removeItem(VK);localStorage.removeItem(KEY);localStorage.removeItem(GK)}catch(e){}vault=null;setupUI();$("lmsg").textContent=""}};
 ["keydown","pointerdown"].forEach(ev=>document.addEventListener(ev,resetIdle));
+
+/* --- GitHub Gist Cloud Sync --- */
+const getGistConfig=()=>{try{return JSON.parse(localStorage.getItem(GK))||{}}catch(e){return{}}};
+const saveGistConfig=c=>{try{localStorage.setItem(GK,JSON.stringify(c))}catch(e){}};
+
+function updateGistStatus(c){
+ const s=$("ghStatus"),ind=$("syncIndicator");
+ if(c&&c.token){
+  const t=c.lastSync?new Date(c.lastSync).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}):"Never";
+  s.textContent=`Connected · Last sync: ${t}`;
+  if(ind)ind.textContent="✓";
+ }else{
+  s.textContent="Not connected";
+  if(ind)ind.textContent="";
+ }
+}
+
+function initGistUI(){
+ const c=getGistConfig();
+ $("ghToken").value=c.token||"";
+ $("ghGistId").value=c.gistId||"";
+ $("ghAuto").checked=c.autoSync!==false;
+ updateGistStatus(c);
+}
+
+async function gistRequest(m,p,b,tok){
+ const res=await fetch(`https://api.github.com${p}`,{
+  method:m,
+  headers:{"Accept":"application/vnd.github+json","Authorization":`Bearer ${tok.trim()}`,"Content-Type":"application/json"},
+  body:b?JSON.stringify(b):undefined
+ });
+ if(!res.ok){
+  const e=await res.json().catch(()=>({}));
+  throw new Error(e.message||`HTTP error ${res.status}`);
+ }
+ return res.json();
+}
+
+async function gistPush(silent=false){
+ const c=getGistConfig();
+ const tok=$("ghToken").value.trim()||c.token;
+ let gid=$("ghGistId").value.trim()||c.gistId;
+ const msg=$("ghMsg");
+ if(!tok){if(!silent)msg.textContent="Please enter your GitHub Personal Access Token.";return}
+ const rawVault=localStorage.getItem(VK);
+ if(!rawVault){if(!silent)msg.textContent="Vault is empty or not created yet.";return}
+ if(!silent)msg.textContent="Syncing to GitHub...";
+ try{
+  let res;
+  if(gid){
+   res=await gistRequest("PATCH",`/gists/${gid}`,{files:{"date-notes-vault.json":{content:rawVault}}},tok);
+  }else{
+   res=await gistRequest("POST","/gists",{description:"Date Notes Encrypted Vault",public:false,files:{"date-notes-vault.json":{content:rawVault}}},tok);
+   gid=res.id;$("ghGistId").value=gid;
+  }
+  const u={token:tok,gistId:gid,autoSync:$("ghAuto").checked,lastSync:Date.now()};
+  saveGistConfig(u);updateGistStatus(u);
+  if(!silent)msg.textContent="✓ Vault pushed to private Gist successfully!";
+ }catch(e){
+  if(!silent)msg.textContent="Sync failed: "+e.message;
+ }
+}
+
+async function gistPull(){
+ const c=getGistConfig();
+ const tok=$("ghToken").value.trim()||c.token;
+ const gid=$("ghGistId").value.trim()||c.gistId;
+ const msg=$("ghMsg");
+ if(!tok){msg.textContent="Please enter your GitHub Personal Access Token.";return}
+ if(!gid){msg.textContent="Please enter your Gist ID to pull from.";return}
+ msg.textContent="Downloading vault from GitHub...";
+ try{
+  const res=await gistRequest("GET",`/gists/${gid}`,null,tok);
+  const file=res.files&&res.files["date-notes-vault.json"];
+  if(!file||!file.content)throw new Error("Gist does not contain 'date-notes-vault.json'");
+  const v=JSON.parse(file.content);
+  if(!v.s||!v.i||!v.d)throw new Error("Invalid encrypted vault format");
+  localStorage.setItem(VK,file.content);
+  const u={token:tok,gistId:gid,autoSync:$("ghAuto").checked,lastSync:Date.now()};
+  saveGistConfig(u);updateGistStatus(u);
+  if(!ck){
+   vault=readVault();setupUI();
+   msg.textContent="✓ Vault restored! Enter password on lock screen.";
+   setTimeout(()=>{closeSyncModal();$("pw").focus()},1200);
+   return;
+  }
+  try{
+   salt=unb(v.s);
+   const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb(v.i)},ck,unb(v.d));
+   notes=JSON.parse(new TextDecoder().decode(pt));notes.forEach(normalize);
+   render();msg.textContent="✓ Notes successfully updated from GitHub!";
+  }catch(e){
+   msg.textContent="✓ Vault updated! Different password detected; please lock & re-unlock.";
+  }
+ }catch(e){
+  msg.textContent="Pull failed: "+e.message;
+ }
+}
+
+let autoSyncTimeout=null;
+function triggerAutoSync(){
+ const c=getGistConfig();
+ if(!c.token||c.autoSync===false)return;
+ clearTimeout(autoSyncTimeout);
+ autoSyncTimeout=setTimeout(()=>gistPush(true),2000);
+}
+
+function openSyncModal(){$("ghMsg").textContent="";initGistUI();$("syncModal").classList.add("open")}
+function closeSyncModal(){$("syncModal").classList.remove("open")}
+
+$("syncBtn").onclick=openSyncModal;
+$("ghClose").onclick=closeSyncModal;
+$("lrestore").onclick=openSyncModal;
+$("ghPush").onclick=()=>gistPush(false);
+$("ghPull").onclick=()=>gistPull();
+$("ghClear").onclick=()=>{
+ if(confirm("Disconnect GitHub Sync on this device? (Your Gist will remain on GitHub)")){
+  try{localStorage.removeItem(GK)}catch(e){}
+  initGistUI();$("ghMsg").textContent="Disconnected.";
+ }
+};
+
 setupUI();
+initGistUI();
 </script>
 </body>
 </html>
