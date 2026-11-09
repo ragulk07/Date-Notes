@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Date Notes</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#e9eef2;--ink:#22303a;--muted:#64747f;--card:#fff;--line:#d3dce3;--accent:#2f6f8f;
 --n0:#ffe58a;--n1:#ffc2cf;--n2:#b8ecd0;--n3:#d6cbff;--n4:#ffd3a3;--noteink:#2b2b2b;
@@ -23,7 +23,7 @@ input[type=date]{font:inherit;color:var(--ink);background:transparent;border:0;p
 button{font:inherit;cursor:pointer}
 .btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
 .btn:hover{opacity:.92}
-.btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible,.tool-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible,.n-tool:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px}
 .note{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;padding:18px;border-radius:3px 3px 3px 22px;color:var(--noteink);
 display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s;position:relative}
@@ -39,9 +39,7 @@ display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);tr
 .sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
 .sheet h2{font:700 2.6rem/1 Caveat,cursive;margin:0 0 2px}
 .sheet .wk{margin:0 0 12px;opacity:.7}
-textarea{width:100%;min-height:44vh;border:0;background:transparent;resize:vertical;font:1.15rem/1.7 Figtree,sans-serif;color:inherit;outline:0;
-background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1.7em calc(1.7em + 1px))}
-.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:14px;font-size:.9rem}
+.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);font-size:.9rem}
 .colors{display:flex;gap:8px}
 .dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,.25);padding:0}
 .dot[aria-pressed=true]{border-color:#000;box-shadow:0 0 0 2px #fff}
@@ -89,17 +87,60 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .lc input:focus-visible{outline:3px solid var(--accent)}
 .lm{color:#c0392b;min-height:1.3em;font-size:.9rem}
 .lk{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.85rem;padding:0;text-align:left;cursor:pointer}
-.modal{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:20px;backdrop-filter:blur(3px)}
+.modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:20px;backdrop-filter:blur(3px)}
 .modal.open{display:flex}
 .sync-badge{font-size:.78rem;color:var(--muted);margin-left:6px;font-weight:normal}
 
-/* --- Clean, Simple Note Toolbar --- */
-.note-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 8px}
-.tool-btn{background:rgba(255,255,255,.58);border:1px solid rgba(0,0,0,.13);border-radius:8px;padding:5px 11px;font-size:.85rem;font-weight:600;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
-.tool-btn:hover{background:rgba(255,255,255,.95);transform:translateY(-1px);box-shadow:0 2px 5px rgba(0,0,0,.1)}
-.tool-btn:active{transform:translateY(0)}
+/* --- Notion-style Tools & Block Editor --- */
+.notion-toolbar{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:8px 0 14px;padding:5px 8px;background:rgba(0,0,0,.06);border-radius:10px}
+.n-tool{all:unset;box-sizing:border-box;cursor:pointer;padding:5px 9px;border-radius:6px;font:600 .84rem Figtree,sans-serif;color:inherit;display:inline-flex;align-items:center;gap:4px;transition:all .15s;line-height:1.2}
+.n-tool:hover{background:rgba(255,255,255,.8);transform:translateY(-1px);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.n-tool:active{transform:translateY(0)}
+.n-tool-sep{width:1px;height:16px;background:rgba(0,0,0,.14);margin:0 2px}
 .task-pill{background:var(--accent);color:#fff;border-radius:99px;padding:3px 10px;font-size:.78rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 4px rgba(0,0,0,.12)}
 .task-pill.all-done{background:#27ae60}
+
+.notion-editor{min-height:48vh;outline:0;display:flex;flex-direction:column;gap:4px;padding:6px 0 30px;position:relative}
+.n-block{display:flex;align-items:flex-start;gap:8px;position:relative;border-radius:6px;padding:3px 4px;transition:background .15s}
+.n-block:hover{background:rgba(0,0,0,.025)}
+.n-content{flex:1;outline:0;word-break:break-word;white-space:pre-wrap;min-height:1.5em;line-height:1.6;font-size:1.12rem}
+.n-content:empty::before{content:attr(data-placeholder);color:rgba(0,0,0,.35);pointer-events:none}
+
+/* Notion Headings */
+.n-block[data-type="h1"] .n-content{font:700 1.85rem/1.25 Figtree,sans-serif;margin-top:8px}
+.n-block[data-type="h2"] .n-content{font:700 1.45rem/1.3 Figtree,sans-serif;margin-top:6px}
+.n-block[data-type="h3"] .n-content{font:700 1.22rem/1.35 Figtree,sans-serif;margin-top:4px}
+
+/* Notion Interactive Checkbox */
+.n-checkbox{width:19px;height:19px;border:2px solid currentColor;border-radius:4px;background:rgba(255,255,255,.7);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;margin-top:4px;font-size:.85rem;font-weight:bold;line-height:1;transition:all .15s;color:inherit}
+.n-checkbox:hover{background:rgba(255,255,255,.95);transform:scale(1.08)}
+.n-block[data-type="todo"].done .n-checkbox{background:var(--accent);border-color:var(--accent);color:#fff}
+.n-block[data-type="todo"].done .n-content{text-decoration:line-through;opacity:.55}
+
+/* Notion Bullet & Number */
+.n-bullet-dot{font-size:1.4rem;line-height:1;opacity:.7;user-select:none;margin-top:-2px;padding:0 2px}
+.n-num-index{font-weight:600;font-size:1rem;opacity:.7;user-select:none;min-width:22px;margin-top:2px}
+
+/* Notion Quote */
+.n-block[data-type="quote"]{border-left:3px solid currentColor;padding-left:12px;font-style:italic;opacity:.92}
+
+/* Notion Callout */
+.n-block[data-type="callout"]{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:8px 12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.n-callout-icon{font-size:1.25rem;user-select:none;margin-top:1px}
+
+/* Notion Divider */
+.n-block[data-type="divider"]{padding:10px 0;width:100%;cursor:default}
+.n-hr{width:100%;height:1px;background:rgba(0,0,0,.16);border:0;margin:0}
+
+/* Notion Slash Command Menu (/) */
+.n-slash-menu{position:absolute;z-index:45;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 32px rgba(0,0,0,.22);width:260px;max-height:280px;overflow-y:auto;display:none;flex-direction:column;padding:6px}
+.n-slash-menu.open{display:flex}
+.n-slash-item{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:.88rem;color:var(--ink);transition:background .12s}
+.n-slash-item:hover,.n-slash-item.selected{background:var(--bg)}
+.n-slash-icon{font-size:1.2rem;width:24px;text-align:center}
+.n-slash-text{display:flex;flex-direction:column}
+.n-slash-title{font-weight:600;font-size:.86rem}
+.n-slash-desc{font-size:.72rem;color:var(--muted)}
 
 /* Toast feedback */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.22);padding:9px 20px;border-radius:99px;font-size:.88rem;font-weight:600;z-index:99;opacity:0;transition:transform .2s ease, opacity .2s ease;pointer-events:none}
@@ -156,17 +197,70 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
     <button class="pinb" id="pin" aria-pressed="false">Pin note</button>
    </div>
    
-   <!-- Simple, beautiful note toolbar -->
-   <div class="note-bar">
-    <button type="button" class="tool-btn" id="btnChecklist" title="Add / toggle checkbox [Ctrl+Enter]">☑ Checklist</button>
-    <button type="button" class="tool-btn" id="btnTick" title="Tick or untick task">✓ Tick</button>
-    <button type="button" class="tool-btn" id="btnBullet" title="Add bullet item">• Bullet</button>
-    <button type="button" class="tool-btn" id="btnTime" title="Insert current time">🕒 Time</button>
-    <button type="button" class="tool-btn" id="btnCopy" title="Copy note text">📋 Copy</button>
-    <button type="button" class="tool-btn" id="btnClearDone" title="Remove completed tasks" style="display:none">🧹 Clear done</button>
+   <!-- Notion Formatting Toolbar -->
+   <div class="notion-toolbar" id="notionBar">
+    <button type="button" class="n-tool" data-cmd="text" title="Plain text">📝 Text</button>
+    <button type="button" class="n-tool" data-cmd="h1" title="Heading 1 (#)"><b>H1</b></button>
+    <button type="button" class="n-tool" data-cmd="h2" title="Heading 2 (##)"><b>H2</b></button>
+    <button type="button" class="n-tool" data-cmd="h3" title="Heading 3 (###)"><b>H3</b></button>
+    <span class="n-tool-sep"></span>
+    <button type="button" class="n-tool" data-cmd="todo" title="To-do checkbox ([] )">☑️ To-do</button>
+    <button type="button" class="n-tool" data-cmd="bullet" title="Bulleted list (- )">• Bullet</button>
+    <button type="button" class="n-tool" data-cmd="number" title="Numbered list (1. )">1. Number</button>
+    <span class="n-tool-sep"></span>
+    <button type="button" class="n-tool" data-cmd="quote" title="Quote (> )">💬 Quote</button>
+    <button type="button" class="n-tool" data-cmd="callout" title="Callout box">💡 Callout</button>
+    <button type="button" class="n-tool" data-cmd="divider" title="Divider line (---)">➖ Divider</button>
+    <span class="n-tool-sep"></span>
+    <button type="button" class="n-tool" id="btnCopyNote" title="Copy note text">📋 Copy</button>
    </div>
 
-   <textarea id="text" placeholder="Write anything about this day... (Tap ☑ Checklist to add tasks, or tap [ ] to tick it)"></textarea>
+   <!-- Notion Block Editor -->
+   <div class="notion-editor" id="editor"></div>
+
+   <!-- Notion Slash Command Menu (/) -->
+   <div class="n-slash-menu" id="slashMenu" role="menu">
+    <button type="button" class="n-slash-item selected" data-type="text">
+     <span class="n-slash-icon">📝</span>
+     <span class="n-slash-text"><span class="n-slash-title">Text</span><span class="n-slash-desc">Plain text paragraph</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="todo">
+     <span class="n-slash-icon">☑️</span>
+     <span class="n-slash-text"><span class="n-slash-title">To-do list</span><span class="n-slash-desc">Track tasks with a checkbox</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="h1">
+     <span class="n-slash-icon"><b>H1</b></span>
+     <span class="n-slash-text"><span class="n-slash-title">Heading 1</span><span class="n-slash-desc">Large section heading</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="h2">
+     <span class="n-slash-icon"><b>H2</b></span>
+     <span class="n-slash-text"><span class="n-slash-title">Heading 2</span><span class="n-slash-desc">Medium section heading</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="h3">
+     <span class="n-slash-icon"><b>H3</b></span>
+     <span class="n-slash-text"><span class="n-slash-title">Heading 3</span><span class="n-slash-desc">Small subheading</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="bullet">
+     <span class="n-slash-icon">•</span>
+     <span class="n-slash-text"><span class="n-slash-title">Bulleted list</span><span class="n-slash-desc">Simple bulleted list</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="number">
+     <span class="n-slash-icon">1.</span>
+     <span class="n-slash-text"><span class="n-slash-title">Numbered list</span><span class="n-slash-desc">List with numbers</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="quote">
+     <span class="n-slash-icon">💬</span>
+     <span class="n-slash-text"><span class="n-slash-title">Quote</span><span class="n-slash-desc">Capture a quote</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="callout">
+     <span class="n-slash-icon">💡</span>
+     <span class="n-slash-text"><span class="n-slash-title">Callout</span><span class="n-slash-desc">Highlighted note box</span></span>
+    </button>
+    <button type="button" class="n-slash-item" data-type="divider">
+     <span class="n-slash-icon">➖</span>
+     <span class="n-slash-text"><span class="n-slash-title">Divider</span><span class="n-slash-desc">Visual separation line</span></span>
+    </button>
+   </div>
 
    <div class="bar">
     <div class="colors" id="colors" role="group" aria-label="Note color"></div>
@@ -221,7 +315,8 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 const KEY="date-notes-v1";let notes=[],cur=null,q="",tag="",cm=new Date();cm.setDate(1);
 const VK="date-notes-vault";const GK="date-notes-gist-cfg";
 let ck=null,salt=null,chain=Promise.resolve();
-let filterMode="all"; // 'all', 'tasks', 'pending'
+let filterMode="all";
+let activeBlock=null; // currently focused block in notion editor
 
 const normalize=n=>{n.title=n.title||"";n.tags=n.tags||[];n.pinned=!!n.pinned};
 const b64=u=>{let s="";new Uint8Array(u).forEach(c=>s+=String.fromCharCode(c));return btoa(s)};
@@ -327,7 +422,12 @@ function render(){
   badgesHtml+='</div>';
 
   let prevText=n.text||"";
-  prevText=prevText.replace(/^\s*(?:-\s*)?\[\s\]\s*/gm,"☐ ").replace(/^\s*(?:-\s*)?\[[xX✓]\]\s*/gm,"☑ ");
+  prevText=prevText
+   .replace(/^#{1,3}\s+/gm,"")
+   .replace(/^\s*(?:-\s*)?\[\s\]\s*/gm,"☐ ")
+   .replace(/^\s*(?:-\s*)?\[[xX✓]\]\s*/gm,"☑ ")
+   .replace(/^>\s*💡\s*/gm,"💡 ")
+   .replace(/^>\s+/gm,"💬 ");
 
   el.innerHTML=`<span class="day">${dt.getDate()}</span><span class="mon">${dt.toLocaleString("en",{month:"long"})} ${dt.getFullYear()}</span>`+
    badgesHtml+
@@ -362,7 +462,7 @@ function setView(v){const c=v==="cal";$("board").style.display=c?"none":"";$("ch
 function updateTaskBadge(){
  if(!cur)return;
  const ts=getTaskStats(cur.text);
- const badge=$("taskBadge"),clearBtn=$("btnClearDone");
+ const badge=$("taskBadge");
  if(ts.total>0){
   badge.style.display="inline-flex";
   badge.textContent=ts.done===ts.total?"✓ All Done":`✓ ${ts.done}/${ts.total}`;
@@ -370,23 +470,11 @@ function updateTaskBadge(){
  }else{
   badge.style.display="none";
  }
- if(clearBtn){
-  clearBtn.style.display=ts.done>0?"inline-flex":"none";
- }
 }
 
-function open(id){
- cur=notes.find(n=>n.id===id);if(!cur)return;
- const dt=parse(cur.date);
- $("title").textContent=dt.toLocaleDateString("en",{day:"numeric",month:"long",year:"numeric"});
- $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
- $("text").value=cur.text;$("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
- updateTaskBadge();
- $("home").classList.remove("open");$("detail").classList.add("open");$("text").focus();window.scrollTo(0,0)}
-
 function stat(msg){
- const w=cur.text.trim()?cur.text.trim().split(/\s+/).length:0;
- const ts=getTaskStats(cur.text);
+ const w=cur&&cur.text.trim()?cur.text.trim().split(/\s+/).length:0;
+ const ts=getTaskStats(cur?cur.text:"");
  let info=(msg||"")+(msg?" · ":"")+w+" words";
  if(ts.total>0)info+=` · ${ts.done}/${ts.total} done`;
  $("saved").textContent=info;
@@ -400,219 +488,478 @@ function paint(){
   d.setAttribute("aria-label","Color "+(i+1));d.setAttribute("aria-pressed",cur.color===i);
   d.onclick=()=>{cur.color=i;save();paint()};$("colors").appendChild(d)}}
 
-/* --- Simple & Good Checklist Actions --- */
-function toggleChecklistLine(){
- const el=$("text"),pos=el.selectionStart,end=el.selectionEnd,val=el.value;
- const lastNl=val.lastIndexOf("\n",pos-1);
- const lineStart=lastNl===-1?0:lastNl+1;
- let nextNl=val.indexOf("\n",end);
- if(nextNl===-1)nextNl=val.length;
+/* =========================================================
+   NOTION BLOCK ENGINE & TOOLS
+   ========================================================= */
 
- const currentLines=val.substring(lineStart,nextNl).split("\n");
- const modified=currentLines.map(line=>{
-  if(!line.trim())return "[ ] ";
-  // Cycle: [ ] -> [✓] -> remove -> [ ]
-  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line)){
-   return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1[✓] ");
+const PLACEHOLDERS = {
+ text: "Type '/' for commands, or start writing...",
+ h1: "Heading 1",
+ h2: "Heading 2",
+ h3: "Heading 3",
+ todo: "To-do",
+ bullet: "List item",
+ number: "List item",
+ quote: "Empty quote",
+ callout: "Callout note...",
+ divider: ""
+};
+
+function parseMarkdownToBlocks(text){
+ if(!text||!text.trim())return[{type:"text",text:""}];
+ const lines=text.split("\n");
+ const blocks=[];
+ for(let line of lines){
+  if(/^#\s+/.test(line)){
+   blocks.push({type:"h1",text:line.replace(/^#\s+/,"")});
+  }else if(/^##\s+/.test(line)){
+   blocks.push({type:"h2",text:line.replace(/^##\s+/,"")});
+  }else if(/^###\s+/.test(line)){
+   blocks.push({type:"h3",text:line.replace(/^###\s+/,"")});
+  }else if(/^\s*(?:-\s*)?\[([ xX✓])\]\s*(.*)$/.test(line)){
+   const m=line.match(/^\s*(?:-\s*)?\[([ xX✓])\]\s*(.*)$/);
+   blocks.push({type:"todo",text:m[2]||"",done:/[xX✓]/.test(m[1])});
+  }else if(/^[•\-]\s+/.test(line)){
+   blocks.push({type:"bullet",text:line.replace(/^[•\-]\s+/,"")});
+  }else if(/^\d+\.\s+/.test(line)){
+   blocks.push({type:"number",text:line.replace(/^\d+\.\s+/,"")});
+  }else if(/^>\s*💡\s*/.test(line)){
+   blocks.push({type:"callout",text:line.replace(/^>\s*💡\s*/,"")});
+  }else if(/^>\s+/.test(line)){
+   blocks.push({type:"quote",text:line.replace(/^>\s+/,"")});
+  }else if(/^---$/.test(line.trim())){
+   blocks.push({type:"divider",text:""});
+  }else{
+   blocks.push({type:"text",text:line});
   }
-  if(/^\s*(?:-\s*)?\[[xX✓]\]\s*/.test(line)){
-   return line.replace(/^(\s*)(?:-\s*)?\[[xX✓]\]\s*/,"$1");
+ }
+ return blocks;
+}
+
+function blocksToMarkdown(){
+ const editor=$("editor");
+ const blocks=[...editor.querySelectorAll(".n-block")];
+ return blocks.map((b,i)=>{
+  const type=b.dataset.type;
+  const contentEl=b.querySelector(".n-content");
+  const text=contentEl?contentEl.innerText.replace(/\n+$/,""):"";
+  switch(type){
+   case "h1": return "# "+text;
+   case "h2": return "## "+text;
+   case "h3": return "### "+text;
+   case "todo": return (b.classList.contains("done")?"- [x] ":"- [ ] ")+text;
+   case "bullet": return "- "+text;
+   case "number": return "1. "+text;
+   case "quote": return "> "+text;
+   case "callout": return "> 💡 "+text;
+   case "divider": return "---";
+   default: return text;
   }
-  if(/^\s*[•\-\*]\s+/.test(line)){
-   return line.replace(/^(\s*)[•\-\*]\s+/,"$1[ ] ");
+ }).join("\n");
+}
+
+function syncAndSave(){
+ if(!cur)return;
+ cur.text=blocksToMarkdown();
+ updateNumbers();
+ debouncedSave();
+ updateTaskBadge();
+ stat();
+}
+
+function updateNumbers(){
+ let num=1;
+ $("editor").querySelectorAll(".n-block").forEach(b=>{
+  if(b.dataset.type==="number"){
+   const idx=b.querySelector(".n-num-index");
+   if(idx)idx.textContent=num+".";
+   num++;
+  }else{
+   num=1;
   }
-  const ind=line.match(/^(\s*)/)[1]||"";
-  return ind+"[ ] "+line.trimStart();
  });
+}
 
- const rep=modified.join("\n");
- el.value=val.substring(0,lineStart)+rep+val.substring(nextNl);
- if(currentLines.length===1&&!currentLines[0].trim()){
-  el.selectionStart=el.selectionEnd=lineStart+rep.length;
+function createBlock(type="text",text="",done=false){
+ const block=document.createElement("div");
+ block.className="n-block";
+ block.dataset.type=type;
+ if(type==="todo"&&done)block.classList.add("done");
+
+ let prefixHtml="";
+ if(type==="todo"){
+  prefixHtml=`<button type="button" class="n-checkbox" aria-checked="${done}">${done?"✓":""}</button>`;
+ }else if(type==="bullet"){
+  prefixHtml='<span class="n-bullet-dot">•</span>';
+ }else if(type==="number"){
+  prefixHtml='<span class="n-num-index">1.</span>';
+ }else if(type==="callout"){
+  prefixHtml='<span class="n-callout-icon">💡</span>';
+ }else if(type==="divider"){
+  block.innerHTML='<hr class="n-hr">';
+  return block;
+ }
+
+ block.innerHTML=prefixHtml+`<div class="n-content" contenteditable="true" data-placeholder="${PLACEHOLDERS[type]||""}"></div>`;
+ const content=block.querySelector(".n-content");
+ if(content)content.innerText=text;
+
+ if(type==="todo"){
+  const btn=block.querySelector(".n-checkbox");
+  btn.onclick=(e)=>{
+   e.stopPropagation();
+   const isDone=block.classList.toggle("done");
+   btn.setAttribute("aria-checked",isDone);
+   btn.textContent=isDone?"✓":"";
+   syncAndSave();
+  };
+ }
+
+ return block;
+}
+
+function renderEditor(text){
+ const editor=$("editor");editor.innerHTML="";
+ const blocks=parseMarkdownToBlocks(text);
+ blocks.forEach(b=>{
+  const el=createBlock(b.type,b.text,b.done);
+  editor.appendChild(el);
+ });
+ if(!editor.children.length){
+  editor.appendChild(createBlock("text",""));
+ }
+ updateNumbers();
+ attachEditorEvents();
+}
+
+function setBlockType(block,newType){
+ if(!block)return;
+ const contentEl=block.querySelector(".n-content");
+ const text=contentEl?contentEl.innerText:"";
+ const newBlock=createBlock(newType,text);
+ block.parentNode.replaceChild(newBlock,block);
+ updateNumbers();
+ syncAndSave();
+ const newContent=newBlock.querySelector(".n-content");
+ if(newContent){
+  newContent.focus();
+  setCursorToEnd(newContent);
+ }
+ activeBlock=newBlock;
+}
+
+function setCursorToEnd(el){
+ const range=document.createRange();
+ const sel=window.getSelection();
+ range.selectNodeContents(el);
+ range.collapse(false);
+ sel.removeAllRanges();
+ sel.addRange(range);
+}
+
+/* --- Notion Slash Menu Logic --- */
+let slashTargetBlock=null;
+let slashFilter="";
+
+function openSlashMenu(block){
+ slashTargetBlock=block;
+ const menu=$("slashMenu");
+ const rect=block.getBoundingClientRect();
+ const editorRect=$("sheet").getBoundingClientRect();
+ 
+ menu.style.top=(rect.bottom-editorRect.top+6)+"px";
+ menu.style.left=Math.min(rect.left-editorRect.left+10,editorRect.width-280)+"px";
+ menu.classList.add("open");
+ resetSlashSelection();
+}
+
+function closeSlashMenu(){
+ $("slashMenu").classList.remove("open");
+ slashTargetBlock=null;
+ slashFilter="";
+}
+
+function resetSlashSelection(){
+ const items=[...$("slashMenu").querySelectorAll(".n-slash-item")];
+ items.forEach((it,i)=>it.classList.toggle("selected",i===0));
+}
+
+$("slashMenu").addEventListener("click",e=>{
+ const item=e.target.closest(".n-slash-item");
+ if(!item||!slashTargetBlock)return;
+ const type=item.dataset.type;
+ const content=slashTargetBlock.querySelector(".n-content");
+ if(content){
+  content.innerText=content.innerText.replace(/\/([a-z0-9]*)$/i,"");
+ }
+ setBlockType(slashTargetBlock,type);
+ closeSlashMenu();
+});
+
+document.addEventListener("click",e=>{
+ if(!e.target.closest(".n-slash-menu")&&!e.target.closest(".n-tool")){
+  closeSlashMenu();
+ }
+});
+
+/* --- Editor Keyboard & Input Handling --- */
+function attachEditorEvents(){
+ const editor=$("editor");
+
+ editor.onfocusin=e=>{
+  const b=e.target.closest(".n-block");
+  if(b)activeBlock=b;
+ };
+
+ editor.oninput=e=>{
+  const block=e.target.closest(".n-block");
+  if(!block)return;
+  const content=e.target;
+  const txt=content.innerText;
+
+  // Check for Markdown trigger shortcuts on Space (e.g. "# ", "## ", "[] ", "- ", "1. ", "> ")
+  if(block.dataset.type==="text"){
+   if(/^#\s/.test(txt)){
+    content.innerText=txt.replace(/^#\s/,"");
+    setBlockType(block,"h1");
+    return;
+   }
+   if(/^##\s/.test(txt)){
+    content.innerText=txt.replace(/^##\s/,"");
+    setBlockType(block,"h2");
+    return;
+   }
+   if(/^###\s/.test(txt)){
+    content.innerText=txt.replace(/^###\s/,"");
+    setBlockType(block,"h3");
+    return;
+   }
+   if(/^\[\]\s|^\[\s\]\s/.test(txt)){
+    content.innerText=txt.replace(/^\[\]\s|^\[\s\]\s/,"");
+    setBlockType(block,"todo");
+    return;
+   }
+   if(/^[•\-]\s/.test(txt)){
+    content.innerText=txt.replace(/^[•\-]\s/,"");
+    setBlockType(block,"bullet");
+    return;
+   }
+   if(/^\d+\.\s/.test(txt)){
+    content.innerText=txt.replace(/^\d+\.\s/,"");
+    setBlockType(block,"number");
+    return;
+   }
+   if(/^>\s/.test(txt)){
+    content.innerText=txt.replace(/^>\s/,"");
+    setBlockType(block,"quote");
+    return;
+   }
+   if(/^---\s*$/.test(txt.trim())){
+    setBlockType(block,"divider");
+    const next=createBlock("text","");
+    block.parentNode.insertBefore(next,block.nextSibling);
+    next.querySelector(".n-content").focus();
+    return;
+   }
+  }
+
+  // Check for slash menu trigger
+  if(txt.endsWith("/")){
+   openSlashMenu(block);
+  }else if($("slashMenu").classList.contains("open")){
+   const m=txt.match(/\/([a-z0-9]*)$/i);
+   if(m){
+    filterSlashMenu(m[1].toLowerCase());
+   }else{
+    closeSlashMenu();
+   }
+  }
+
+  syncAndSave();
+ };
+
+ editor.onkeydown=e=>{
+  const block=e.target.closest(".n-block");
+  if(!block)return;
+  const content=e.target;
+
+  // Handle Slash menu keyboard selection
+  if($("slashMenu").classList.contains("open")){
+   const items=[...$("slashMenu").querySelectorAll(".n-slash-item:not([style*='display: none'])")];
+   const selIdx=items.findIndex(it=>it.classList.contains("selected"));
+   if(e.key==="ArrowDown"){
+    e.preventDefault();
+    if(items.length){
+     items[selIdx].classList.remove("selected");
+     items[(selIdx+1)%items.length].classList.add("selected");
+    }
+    return;
+   }
+   if(e.key==="ArrowUp"){
+    e.preventDefault();
+    if(items.length){
+     items[selIdx].classList.remove("selected");
+     items[(selIdx-1+items.length)%items.length].classList.add("selected");
+    }
+    return;
+   }
+   if(e.key==="Enter"){
+    e.preventDefault();
+    const sel=items[selIdx]||items[0];
+    if(sel){
+     content.innerText=content.innerText.replace(/\/([a-z0-9]*)$/i,"");
+     setBlockType(block,sel.dataset.type);
+     closeSlashMenu();
+    }
+    return;
+   }
+   if(e.key==="Escape"){
+    closeSlashMenu();
+    return;
+   }
+  }
+
+  // Enter Key: Notion Block splitting / continuation
+  if(e.key==="Enter"&&!e.shiftKey){
+   e.preventDefault();
+   const type=block.dataset.type;
+   const isEmpty=!content.innerText.trim();
+
+   // Empty list or special block: convert back to plain text on Enter
+   if(isEmpty&&type!=="text"){
+    setBlockType(block,"text");
+    return;
+   }
+
+   // List continuation
+   const nextType=(type==="todo"||type==="bullet"||type==="number")?type:"text";
+   const nextBlock=createBlock(nextType,"");
+   block.parentNode.insertBefore(nextBlock,block.nextSibling);
+   updateNumbers();
+   syncAndSave();
+   const nextContent=nextBlock.querySelector(".n-content");
+   if(nextContent){
+    nextContent.focus();
+   }
+   activeBlock=nextBlock;
+   return;
+  }
+
+  // Backspace Key: Convert special block to text, or delete empty block
+  if(e.key==="Backspace"){
+   const selection=window.getSelection();
+   const atStart=selection.anchorOffset===0&&selection.focusOffset===0;
+   const isEmpty=!content.innerText.trim();
+
+   if(atStart||isEmpty){
+    const type=block.dataset.type;
+    if(type!=="text"){
+     e.preventDefault();
+     setBlockType(block,"text");
+     return;
+    }else if(editor.children.length>1&&isEmpty){
+     e.preventDefault();
+     const prev=block.previousElementSibling;
+     block.remove();
+     updateNumbers();
+     syncAndSave();
+     if(prev){
+      const prevContent=prev.querySelector(".n-content");
+      if(prevContent){
+       prevContent.focus();
+       setCursorToEnd(prevContent);
+      }
+      activeBlock=prev;
+     }
+     return;
+    }
+   }
+  }
+
+  // Navigation: Arrow Up / Down between blocks
+  if(e.key==="ArrowUp"){
+   const prev=block.previousElementSibling;
+   if(prev){
+    const prevContent=prev.querySelector(".n-content");
+    if(prevContent){
+     prevContent.focus();
+     activeBlock=prev;
+    }
+   }
+  }
+  if(e.key==="ArrowDown"){
+   const next=block.nextElementSibling;
+   if(next){
+    const nextContent=next.querySelector(".n-content");
+    if(nextContent){
+     nextContent.focus();
+     activeBlock=next;
+    }
+   }
+  }
+ };
+}
+
+function filterSlashMenu(q){
+ const items=[...$("slashMenu").querySelectorAll(".n-slash-item")];
+ let first=true;
+ items.forEach(it=>{
+  const title=it.querySelector(".n-slash-title").textContent.toLowerCase();
+  const desc=it.querySelector(".n-slash-desc").textContent.toLowerCase();
+  const match=title.includes(q)||desc.includes(q);
+  it.style.display=match?"flex":"none";
+  it.classList.remove("selected");
+  if(match&&first){
+   it.classList.add("selected");
+   first=false;
+  }
+ });
+}
+
+/* --- Notion Toolbar Button Handlers --- */
+$("notionBar").addEventListener("click",e=>{
+ const tool=e.target.closest(".n-tool");
+ if(!tool||tool.id==="btnCopyNote")return;
+ const cmd=tool.dataset.cmd;
+ if(!cmd)return;
+
+ if(!activeBlock||!activeBlock.isConnected){
+  activeBlock=$("editor").lastElementChild||createBlock("text","");
+  if(!activeBlock.parentNode)$("editor").appendChild(activeBlock);
+ }
+
+ if(cmd==="divider"){
+  const divBlock=createBlock("divider","");
+  activeBlock.parentNode.insertBefore(divBlock,activeBlock.nextSibling);
+  const nextText=createBlock("text","");
+  divBlock.parentNode.insertBefore(nextText,divBlock.nextSibling);
+  nextText.querySelector(".n-content").focus();
+  activeBlock=nextText;
  }else{
-  el.selectionStart=lineStart;
-  el.selectionEnd=lineStart+rep.length;
+  setBlockType(activeBlock,cmd);
  }
- el.focus();
- cur.text=el.value;
- debouncedSave();updateTaskBadge();stat();
-}
-
-function tickCurrentTask(){
- const el=$("text"),pos=el.selectionStart,end=el.selectionEnd,val=el.value;
- const lastNl=val.lastIndexOf("\n",pos-1);
- const lineStart=lastNl===-1?0:lastNl+1;
- let nextNl=val.indexOf("\n",end);
- if(nextNl===-1)nextNl=val.length;
-
- const currentLines=val.substring(lineStart,nextNl).split("\n");
- const modified=currentLines.map(line=>{
-  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line)){
-   return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1[✓] ");
-  }
-  if(/^\s*(?:-\s*)?\[[xX✓]\]\s*/.test(line)){
-   return line.replace(/^(\s*)(?:-\s*)?\[[xX✓]\]\s*/,"$1[ ] ");
-  }
-  const ind=line.match(/^(\s*)/)[1]||"";
-  return ind+"[✓] "+line.trimStart();
- });
-
- const rep=modified.join("\n");
- el.value=val.substring(0,lineStart)+rep+val.substring(nextNl);
- el.selectionStart=lineStart;
- el.selectionEnd=lineStart+rep.length;
- el.focus();
- cur.text=el.value;
- debouncedSave();updateTaskBadge();stat();
-}
-
-function insertTextAtCursor(snippet){
- const el=$("text"),pos=el.selectionStart,val=el.value;
- el.value=val.substring(0,pos)+snippet+val.substring(el.selectionEnd);
- el.selectionStart=el.selectionEnd=pos+snippet.length;
- el.focus();
- cur.text=el.value;
- debouncedSave();updateTaskBadge();stat();
-}
-
-/* --- Tap / Click directly on [ ] or [✓] to toggle --- */
-$("text").addEventListener("click",e=>{
- const el=e.target,clickPos=el.selectionStart,val=el.value;
- const lastNl=val.lastIndexOf("\n",clickPos-1);
- const lineStart=lastNl===-1?0:lastNl+1;
- const curLine=val.substring(lineStart);
- const nextNl=curLine.indexOf("\n");
- const line=nextNl===-1?curLine:curLine.substring(0,nextNl);
- 
- const m=line.match(/^(\s*(?:-\s*)?)(\[[ xX✓]\])\s*/);
- if(!m)return;
- 
- const prefixLen=m[0].length;
- // If clicked right on the checkbox prefix
- if(clickPos>=lineStart&&clickPos<=lineStart+prefixLen){
-  const isChecked=/\[[xX✓]\]/.test(m[2]);
-  const newBox=isChecked?"[ ] ":"[✓] ";
-  const newLine=m[1]+newBox+line.substring(prefixLen);
-  const lineEnd=lineStart+line.length;
-  el.value=val.substring(0,lineStart)+newLine+val.substring(lineEnd);
-  el.selectionStart=el.selectionEnd=lineStart+m[1].length+newBox.length;
-  cur.text=el.value;
-  debouncedSave();updateTaskBadge();stat();
-  showToast(isChecked?"Task marked pending":"✓ Task completed!");
- }
+ syncAndSave();
 });
 
-/* --- Smart typing in Textarea --- */
-$("text").addEventListener("keydown",e=>{
- if(e.key==="Enter"&&!e.shiftKey){
-  const el=e.target,pos=el.selectionStart,val=el.value;
-  const lastNl=val.lastIndexOf("\n",pos-1);
-  const lineStart=lastNl===-1?0:lastNl+1;
-  const curLine=val.substring(lineStart,pos);
-
-  // Auto-continue checkbox: "[ ] ", "[✓] ", "[x] ", "- [ ] "
-  const chkMatch=curLine.match(/^(\s*)(?:-\s*)?(\[[ xX✓]\])\s*(.*)$/);
-  if(chkMatch){
-   e.preventDefault();
-   const indent=chkMatch[1]||"",content=chkMatch[3]||"";
-   if(!content.trim()){
-    // Empty checkbox: remove prefix on Enter
-    const lineEnd=val.indexOf("\n",pos);
-    const endPos=lineEnd===-1?val.length:lineEnd;
-    el.value=val.substring(0,lineStart)+val.substring(endPos);
-    el.selectionStart=el.selectionEnd=lineStart;
-   }else{
-    // Add next checkbox item
-    const ins="\n"+indent+"[ ] ";
-    el.value=val.substring(0,pos)+ins+val.substring(pos);
-    el.selectionStart=el.selectionEnd=pos+ins.length;
-   }
-   cur.text=el.value;debouncedSave();updateTaskBadge();stat();
-   return;
-  }
-
-  // Bullet list: "• ", "- "
-  const bltMatch=curLine.match(/^(\s*)([•\-]\s+)(.*)$/);
-  if(bltMatch){
-   e.preventDefault();
-   const indent=bltMatch[1]||"",marker=bltMatch[2],content=bltMatch[3]||"";
-   if(!content.trim()){
-    const lineEnd=val.indexOf("\n",pos);
-    const endPos=lineEnd===-1?val.length:lineEnd;
-    el.value=val.substring(0,lineStart)+val.substring(endPos);
-    el.selectionStart=el.selectionEnd=lineStart;
-   }else{
-    const ins="\n"+indent+marker;
-    el.value=val.substring(0,pos)+ins+val.substring(pos);
-    el.selectionStart=el.selectionEnd=pos+ins.length;
-   }
-   cur.text=el.value;debouncedSave();stat();
-   return;
-  }
- }
-
- // Shortcut: Ctrl+Enter or Alt+T or Ctrl+Shift+C to toggle checkbox
- if(((e.ctrlKey||e.metaKey)&&e.key==="Enter")||(e.altKey&&(e.key==="t"||e.key==="T"))||((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==="c"||e.key==="C"))){
-  e.preventDefault();
-  toggleChecklistLine();
- }
-
- // Tab key indents
- if(e.key==="Tab"){
-  e.preventDefault();
-  const start=e.target.selectionStart,val=e.target.value;
-  e.target.value=val.substring(0,start)+"  "+val.substring(e.target.selectionEnd);
-  e.target.selectionStart=e.target.selectionEnd=start+2;
-  cur.text=e.target.value;debouncedSave();
- }
-});
-
-// Auto-convert typed "[] " or "[ ] " into "[ ] "
-$("text").addEventListener("input",e=>{
- const el=e.target,pos=el.selectionStart,val=el.value;
- const prefix=val.substring(0,pos);
- if(prefix.endsWith("[] ")||prefix.endsWith("[ ] ")){
-  const isShort=prefix.endsWith("[] ");
-  const matchPos=pos-(isShort?3:4);
-  const lastNl=val.lastIndexOf("\n",matchPos-1);
-  const lineStart=lastNl===-1?0:lastNl+1;
-  const beforeMatch=val.substring(lineStart,matchPos);
-  if(beforeMatch.trim()===""||beforeMatch.trim()==="-"){
-   const newVal=val.substring(0,lineStart)+(beforeMatch.startsWith("  ")?beforeMatch:"")+"[ ] "+val.substring(pos);
-   el.value=newVal;
-   const newPos=lineStart+(beforeMatch.startsWith("  ")?beforeMatch.length:0)+4;
-   el.selectionStart=el.selectionEnd=newPos;
-  }
- }
- cur.text=el.value;debouncedSave();updateTaskBadge();stat();
-});
-
-/* --- Toolbar Buttons --- */
-$("btnChecklist").onclick=toggleChecklistLine;
-$("btnTick").onclick=tickCurrentTask;
-$("btnBullet").onclick=()=>{
- const el=$("text"),pos=el.selectionStart,val=el.value;
- const lastNl=val.lastIndexOf("\n",pos-1),lineStart=lastNl===-1?0:lastNl+1;
- if(val.substring(lineStart,pos).trim()===""){insertTextAtCursor("• ")}else{insertTextAtCursor("\n• ")}
-};
-$("btnTime").onclick=()=>{
- const tstr=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
- insertTextAtCursor(`[${tstr}] `);
-};
-$("btnCopy").onclick=()=>{
+$("btnCopyNote").onclick=()=>{
  if(!cur||!cur.text){showToast("Note is empty");return}
  const fullText=(cur.title?cur.title+"\n\n":"")+cur.text;
  navigator.clipboard.writeText(fullText).then(()=>showToast("✓ Copied note to clipboard!"));
 };
-$("btnClearDone").onclick=()=>{
- if(!cur)return;
- if(confirm("Remove all completed tasks from this note?")){
-  const lines=cur.text.split("\n").filter(l=>!/^\s*(?:-\s*)?\[[xX✓]\]/.test(l));
-  cur.text=lines.join("\n");$("text").value=cur.text;
-  debouncedSave();updateTaskBadge();stat();
-  showToast("🧹 Completed tasks cleared!");
- }
-};
+
+function open(id){
+ cur=notes.find(n=>n.id===id);if(!cur)return;
+ const dt=parse(cur.date);
+ $("title").textContent=dt.toLocaleDateString("en",{day:"numeric",month:"long",year:"numeric"});
+ $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
+ $("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
+ renderEditor(cur.text);
+ updateTaskBadge();
+ $("home").classList.remove("open");$("detail").classList.add("open");
+ const firstContent=$("editor").querySelector(".n-content");
+ if(firstContent)firstContent.focus();
+ window.scrollTo(0,0);
+}
 
 $("addBtn").onclick=()=>{const v=$("d").value;if(v)make(v)};
 $("ntitle").oninput=e=>{cur.title=e.target.value;debouncedSave()};
@@ -640,7 +987,7 @@ function setupUI(){const f=!vault;$("ltitle").textContent=f?"Set a password":"No
 function resetIdle(){clearTimeout(idle);if(ck)idle=setTimeout(lock,5*60*1000)}
 
 function lock(){chain.then(()=>{ck=null;notes=[];cur=null;clearTimeout(idle);clearTimeout(saveDebounceTimer);
- $("text").value="";$("board").innerHTML="";$("detail").classList.remove("open");$("home").classList.add("open");$("app").hidden=true;
+ $("board").innerHTML="";$("detail").classList.remove("open");$("home").classList.add("open");$("app").hidden=true;
  vault=readVault();setupUI();$("lock").style.display="flex";$("pw").focus()})}
 
 async function go(){
