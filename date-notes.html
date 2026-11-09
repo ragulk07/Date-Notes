@@ -21,25 +21,26 @@ h1{font:700 2.4rem/1 Caveat,cursive;margin:0}
 .add{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);padding:6px;border-radius:14px}
 input[type=date]{font:inherit;color:var(--ink);background:transparent;border:0;padding:8px;outline:0}
 button{font:inherit;cursor:pointer}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.btn:hover{opacity:.92}
 .btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px}
 .note{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;padding:18px;border-radius:3px 3px 3px 22px;color:var(--noteink);
-display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s}
+display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s;position:relative}
 .note:hover{transform:rotate(0) translateY(-4px)!important}
 .note .day{font:700 3.4rem/1 Caveat,cursive}
 .note .mon{font:600 1.3rem/1 Caveat,cursive;margin-top:2px}
-.note .prev{margin-top:auto;font-size:.88rem;line-height:1.35;opacity:.8;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.note .prev{margin-top:auto;font-size:.88rem;line-height:1.35;opacity:.85;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;white-space:pre-line}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 10px;border:2px dashed var(--line);border-radius:16px}
 .page{display:none}
 .page.open{display:block}
 .ghost{background:none;border:0;color:var(--accent);font-weight:600;padding:6px 0;margin-bottom:14px}
-.sheet{border-radius:6px 6px 6px 28px;padding:26px;min-height:60vh;color:var(--noteink);box-shadow:0 14px 28px -14px rgba(0,0,0,.4)}
+.sheet{border-radius:6px 6px 6px 28px;padding:26px;min-height:60vh;color:var(--noteink);box-shadow:0 14px 28px -14px rgba(0,0,0,.4);position:relative}
 .sheet h2{font:700 2.6rem/1 Caveat,cursive;margin:0 0 4px}
-.sheet .wk{margin:0 0 16px;opacity:.7}
+.sheet .wk{margin:0 0 14px;opacity:.7}
 textarea{width:100%;min-height:42vh;border:0;background:transparent;resize:vertical;font:1.15rem/1.7 Figtree,sans-serif;color:inherit;outline:0;
 background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1.7em calc(1.7em + 1px))}
-.bar{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:.9rem}
+.bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:14px;font-size:.9rem}
 .colors{display:flex;gap:8px}
 .dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(0,0,0,.25);padding:0}
 .dot[aria-pressed=true]{border-color:#000;box-shadow:0 0 0 2px #fff}
@@ -51,11 +52,13 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .seg button{background:none;border:0;color:var(--muted);padding:8px 14px;font-weight:600}
 .seg button[aria-pressed=true]{background:var(--accent);color:#fff}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
-.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:4px 12px;font-size:.85rem;cursor:pointer}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:4px 12px;font-size:.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--bg)}
 .banner{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:none}
-.note{position:relative}
-.badge{position:absolute;top:10px;right:12px;font-size:.78rem;font-weight:600;background:rgba(0,0,0,.14);border-radius:99px;padding:1px 9px}
+.badges{position:absolute;top:10px;right:12px;display:flex;gap:4px;align-items:center}
+.badge{font-size:.78rem;font-weight:600;background:rgba(0,0,0,.14);border-radius:99px;padding:1px 9px}
+.badge.task-badge{background:rgba(0,0,0,.18);font-size:.74rem}
+.badge.task-badge.all-done{background:#27ae60;color:#fff}
 .ntitle{font-weight:600;margin-top:auto;font-size:.95rem}
 .ntitle+.prev{margin-top:2px}
 .tg{font-size:.78rem;opacity:.75;margin-top:4px}
@@ -88,6 +91,53 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .modal{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:20px;backdrop-filter:blur(3px)}
 .modal.open{display:flex}
 .sync-badge{font-size:.78rem;color:var(--muted);margin-left:6px;font-weight:normal}
+
+/* --- Note Toolbar & Checklist Enhancements --- */
+.sheet-nav{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:10px}
+.view-tabs{display:inline-flex;background:rgba(0,0,0,.09);padding:3px;border-radius:10px;gap:3px}
+.tab-btn{background:none;border:0;color:inherit;padding:5px 13px;border-radius:7px;font-weight:600;font-size:.88rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.tab-btn.active{background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.15);color:var(--noteink)}
+.task-pill{background:var(--accent);color:#fff;border-radius:99px;padding:1px 7px;font-size:.72rem;font-weight:700}
+.task-pill.all-done{background:#27ae60}
+.note-actions{display:flex;gap:6px;align-items:center}
+.sheet-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
+.tool-btn{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:5px 10px;font-size:.84rem;font-weight:600;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;line-height:1.2}
+.tool-btn:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+.tool-btn:active{transform:translateY(0)}
+
+/* Progress Bar */
+.task-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px;background:rgba(255,255,255,.4);padding:6px 12px;border-radius:8px}
+.progress-track{flex:1;height:8px;background:rgba(0,0,0,.1);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .25s ease}
+.progress-label{font-size:.82rem;font-weight:600;opacity:.85;white-space:nowrap}
+
+/* Interactive Checklist Mode */
+.interactive-tasks{min-height:38vh;display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.4);transition:all .15s}
+.task-row:hover{background:rgba(255,255,255,.7)}
+.task-row.text-row{background:transparent;padding:4px 10px;opacity:.85;font-style:italic}
+.task-check-btn{width:22px;height:22px;border:2px solid currentColor;border-radius:6px;background:rgba(255,255,255,.8);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;margin-top:2px;font-weight:bold;font-size:.85rem;line-height:1;transition:all .15s}
+.task-check-btn[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.task-text{flex:1;font-size:1.1rem;line-height:1.45;word-break:break-word}
+.task-row.done .task-text{text-decoration:line-through;opacity:.55}
+.task-del-btn{background:none;border:0;color:inherit;opacity:.35;font-size:1.15rem;cursor:pointer;padding:0 4px;line-height:1;border-radius:4px}
+.task-del-btn:hover{opacity:.95;color:#c0392b}
+
+/* Quick Add Task Input */
+.quick-add-wrap{display:flex;gap:8px;align-items:center;margin-top:10px}
+.quick-add-wrap input{flex:1;border:1px dashed rgba(0,0,0,.25);background:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font:inherit;color:inherit;outline:0}
+.quick-add-wrap input:focus{border-style:solid;border-color:currentColor;background:rgba(255,255,255,.85)}
+
+/* Dropdown Menu */
+.dropdown{position:relative;display:inline-block}
+.dropdown-menu{display:none;position:absolute;top:100%;left:0;margin-top:4px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:25;min-width:180px;padding:5px;flex-direction:column}
+.dropdown-menu.open{display:flex}
+.dropdown-menu button{all:unset;padding:8px 12px;font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;border-radius:6px;text-align:left}
+.dropdown-menu button:hover{background:var(--bg)}
+
+/* Toast feedback */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.22);padding:9px 20px;border-radius:99px;font-size:.88rem;font-weight:600;z-index:99;opacity:0;transition:transform .2s ease, opacity .2s ease;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -113,7 +163,7 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
   <div class="quote"><p id="qt" aria-live="polite"></p><button id="qn">New quote</button></div>
   <div class="banner" id="banner"></div>
   <div class="tools">
-   <input type="search" id="q" placeholder="Search notes, titles or tags" aria-label="Search notes">
+   <input type="search" id="q" placeholder="Search notes, tasks, titles or tags" aria-label="Search notes">
    <div class="seg"><button id="vb" aria-pressed="true">Board</button><button id="vc" aria-pressed="false">Calendar</button></div>
    <button class="chip" id="syncBtn" title="GitHub Gist Cloud Sync">☁️ Cloud Sync<span id="syncIndicator" class="sync-badge"></span></button>
    <button class="chip" id="theme">Dark / light</button>
@@ -128,8 +178,67 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
   <div class="sheet" id="sheet">
    <h2 id="title"></h2><p class="wk" id="wk"></p>
    <div class="fields"><input id="ntitle" placeholder="Title (optional)" aria-label="Title"><input id="ntags" placeholder="Tags, separated by commas" aria-label="Tags"><button class="pinb" id="pin" aria-pressed="false">Pin note</button></div>
-   <textarea id="text" placeholder="Write anything about this day..."></textarea>
-   <div class="bar"><div class="colors" id="colors" role="group" aria-label="Note color"></div><span id="saved" class="count"></span><button class="del" id="del">Delete note</button></div>
+   
+   <!-- Sheet Top Bar (Mode Switcher & Quick Actions) -->
+   <div class="sheet-nav">
+    <div class="view-tabs" role="tablist">
+     <button class="tab-btn active" id="tabWrite" role="tab" aria-selected="true">✏️ Write</button>
+     <button class="tab-btn" id="tabCheck" role="tab" aria-selected="false">☑️ Checklist <span id="tabCheckBadge" class="task-pill" style="display:none">0/0</span></button>
+    </div>
+    <div class="note-actions">
+     <button type="button" class="tool-btn" id="btnCopyNote" title="Copy full note to clipboard">📋 Copy</button>
+     <button type="button" class="tool-btn" id="btnExportNote" title="Download note as file">📥 Export</button>
+    </div>
+   </div>
+
+   <!-- Progress Bar (shown when note has tasks) -->
+   <div class="task-progress" id="taskProgressWrap" style="display:none">
+    <div class="progress-track"><div class="progress-fill" id="taskProgressFill"></div></div>
+    <span class="progress-label" id="taskProgressLabel">0 of 0 tasks done</span>
+   </div>
+
+   <!-- Formatting Toolbar while typing -->
+   <div class="sheet-tools" id="sheetTools">
+    <button type="button" class="tool-btn" id="btnAddCheck" title="Add / Toggle Checkbox (- [ ]) (Ctrl+Shift+C)">☑️ Checkbox</button>
+    <button type="button" class="tool-btn" id="btnTickDone" title="Mark selected line(s) done (- [x])">✓ Tick Done</button>
+    <button type="button" class="tool-btn" id="btnAddBullet" title="Add bullet list item (•)">• Bullet</button>
+    <button type="button" class="tool-btn" id="btnAddNum" title="Add numbered list item (1.)">1. Number</button>
+    <button type="button" class="tool-btn" id="btnAddTime" title="Insert current timestamp">🕒 Time</button>
+    <div class="dropdown">
+     <button type="button" class="tool-btn" id="btnTemplate">📝 Templates ▾</button>
+     <div class="dropdown-menu" id="templateMenu">
+      <button type="button" data-tmpl="todo">📋 Daily To-Do</button>
+      <button type="button" data-tmpl="meeting">💼 Meeting Notes</button>
+      <button type="button" data-tmpl="shopping">🛒 Shopping List</button>
+      <button type="button" data-tmpl="habits">🎯 Daily Habits</button>
+     </div>
+    </div>
+   </div>
+
+   <!-- Text Editor View -->
+   <div id="editorWrap">
+    <textarea id="text" placeholder="Write anything about this day... (Click ☑️ Checkbox or type [ ] to start a checklist)"></textarea>
+   </div>
+
+   <!-- Interactive Checklist View -->
+   <div id="checklistWrap" style="display:none">
+    <div class="interactive-tasks" id="taskList"></div>
+    <div class="quick-add-wrap">
+     <input id="quickTaskInput" placeholder="Add a new task and press Enter..." aria-label="New task">
+     <button type="button" class="btn" id="quickTaskBtn" style="padding:8px 14px">+ Add</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+     <button type="button" class="tool-btn" id="btnCheckAll">✓ Check all</button>
+     <button type="button" class="tool-btn" id="btnUncheckAll">☐ Uncheck all</button>
+     <button type="button" class="tool-btn" id="btnClearDone">🧹 Clear completed</button>
+    </div>
+   </div>
+
+   <div class="bar">
+    <div class="colors" id="colors" role="group" aria-label="Note color"></div>
+    <span id="saved" class="count"></span>
+    <button class="del" id="del">Delete note</button>
+   </div>
   </div>
  </section>
 </div>
@@ -172,10 +281,15 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
  </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 const KEY="date-notes-v1";let notes=[],cur=null,q="",tag="",cm=new Date();cm.setDate(1);
 const VK="date-notes-vault";const GK="date-notes-gist-cfg";
 let ck=null,salt=null,chain=Promise.resolve();
+let currentViewMode="write"; // 'write' or 'check'
+let filterMode="all"; // 'all', 'tasks', 'pending'
+
 const normalize=n=>{n.title=n.title||"";n.tags=n.tags||[];n.pinned=!!n.pinned};
 const b64=u=>{let s="";new Uint8Array(u).forEach(c=>s+=String.fromCharCode(c));return btoa(s)};
 const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
@@ -202,6 +316,18 @@ const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${Str
 const col=i=>`var(--n${i})`;
 $("d").value=iso(new Date());
 
+function showToast(msg){
+ const t=$("toast");t.textContent=msg;t.classList.add("show");
+ setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+function getTaskStats(text){
+ if(!text)return{total:0,done:0};
+ const matches=text.match(/^\s*(?:-\s*)?\[([ xX])\]/gm)||[];
+ const doneMatches=text.match(/^\s*(?:-\s*)?\[([xX])\]/gm)||[];
+ return{total:matches.length,done:doneMatches.length};
+}
+
 function make(v){let n=notes.find(x=>x.date===v);if(n){open(n.id);return}
  n={id:Date.now(),date:v,text:"",title:"",tags:[],pinned:false,color:notes.length%5};notes.push(n);save();render();open(n.id)}
 
@@ -209,25 +335,75 @@ function render(){
  const t=iso(new Date()),b=$("board");b.innerHTML="";
  const tags=[...new Set(notes.flatMap(n=>n.tags))];
  if(tag&&!tags.includes(tag))tag="";
- $("chips").innerHTML="";
- if(tags.length)["",...tags].forEach(x=>{const c=document.createElement("button");c.className="chip";c.textContent=x||"All";c.setAttribute("aria-pressed",tag===x);c.onclick=()=>{tag=x;render()};$("chips").appendChild(c)});
+ 
+ const chips=$("chips");chips.innerHTML="";
+ 
+ // Standard filter chips: All, ☑️ Tasks, ⏳ Incomplete
+ const allChip=document.createElement("button");
+ allChip.className="chip";allChip.textContent="All";
+ allChip.setAttribute("aria-pressed",!tag&&filterMode==="all");
+ allChip.onclick=()=>{tag="";filterMode="all";render()};
+ chips.appendChild(allChip);
+
+ const taskChip=document.createElement("button");
+ taskChip.className="chip";taskChip.textContent="☑️ Has Tasks";
+ taskChip.setAttribute("aria-pressed",filterMode==="tasks");
+ taskChip.onclick=()=>{tag="";filterMode=filterMode==="tasks"?"all":"tasks";render()};
+ chips.appendChild(taskChip);
+
+ const pendingChip=document.createElement("button");
+ pendingChip.className="chip";pendingChip.textContent="⏳ Pending";
+ pendingChip.setAttribute("aria-pressed",filterMode==="pending");
+ pendingChip.onclick=()=>{tag="";filterMode=filterMode==="pending"?"all":"pending";render()};
+ chips.appendChild(pendingChip);
+
+ if(tags.length)tags.forEach(x=>{
+  const c=document.createElement("button");c.className="chip";c.textContent="#"+x;
+  c.setAttribute("aria-pressed",tag===x&&filterMode==="all");
+  c.onclick=()=>{tag=tag===x?"":x;filterMode="all";render()};
+  chips.appendChild(c);
+ });
+
  const nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+6);
  const soon=notes.filter(n=>n.date>=t&&n.date<=iso(nextWeek));
  const tn=notes.find(n=>n.date===t),bn=$("banner");
  bn.style.display=soon.length?"block":"none";
  bn.textContent=tn?`You have a note for today${soon.length>1?` and ${soon.length-1} more this week`:""}.`:`${soon.length} note${soon.length>1?"s":""} coming up in the next 7 days.`;
- const list=notes.filter(n=>(!tag||n.tags.includes(tag))&&(n.title+" "+n.text+" "+n.tags.join(" ")).toLowerCase().includes(q))
-  .sort((a,b)=>(b.pinned-a.pinned)||a.date.localeCompare(b.date));
- if(!list.length)b.innerHTML=`<div class="empty">${notes.length?"No notes match your search.":"No notes yet. Pick a date above and press Add note."}</div>`;
+
+ const list=notes.filter(n=>{
+  const ts=getTaskStats(n.text);
+  if(filterMode==="tasks"&&ts.total===0)return false;
+  if(filterMode==="pending"&&(ts.total===0||ts.done===ts.total))return false;
+  if(tag&&!n.tags.includes(tag))return false;
+  return (n.title+" "+n.text+" "+n.tags.join(" ")).toLowerCase().includes(q);
+ }).sort((a,b)=>(b.pinned-a.pinned)||a.date.localeCompare(b.date));
+
+ if(!list.length)b.innerHTML=`<div class="empty">${notes.length?"No notes match your filter or search.":"No notes yet. Pick a date above and press Add note."}</div>`;
+
  list.forEach((n,i)=>{
   const dt=parse(n.date),el=document.createElement("button");
+  const ts=getTaskStats(n.text);
   el.className="note";el.style.background=col(n.color);
   el.style.transform=`rotate(${[-2,1.5,-1,2,-1.5][i%5]}deg)`;
+  
+  let badgesHtml='<div class="badges">';
+  if(ts.total>0){
+   badgesHtml+=`<span class="badge task-badge ${ts.done===ts.total?'all-done':''}">${ts.done===ts.total?'✓ Done':`✓ ${ts.done}/${ts.total}`}</span>`;
+  }
+  if(n.pinned)badgesHtml+='<span class="badge">Pinned</span>';
+  if(n.date===t)badgesHtml+='<span class="badge">Today</span>';
+  badgesHtml+='</div>';
+
+  // Format preview with check symbols
+  let prevText=n.text||"";
+  prevText=prevText.replace(/^\s*(?:-\s*)?\[\s\]\s*/gm,"☐ ").replace(/^\s*(?:-\s*)?\[[xX]\]\s*/gm,"☑ ");
+
   el.innerHTML=`<span class="day">${dt.getDate()}</span><span class="mon">${dt.toLocaleString("en",{month:"long"})} ${dt.getFullYear()}</span>`+
-   `${n.date===t||n.pinned?'<span class="badge">'+(n.pinned?"Pinned":"")+(n.pinned&&n.date===t?" · ":"")+(n.date===t?"Today":"")+'</span>':""}`+
+   badgesHtml+
    `<span class="ntitle"></span><span class="prev"></span><span class="tg"></span>`;
+  
   el.querySelector(".ntitle").textContent=n.title;
-  el.querySelector(".prev").textContent=n.text||(n.title?"":"Empty note");
+  el.querySelector(".prev").textContent=prevText||(n.title?"":"Empty note");
   el.querySelector(".tg").textContent=n.tags.map(x=>"#"+x).join(" ");
   if(!n.title)el.querySelector(".ntitle").remove();
   el.onclick=()=>open(n.id);b.appendChild(el)});
@@ -241,11 +417,56 @@ function renderCal(){
  for(let d=1;d<=new Date(y,m+1,0).getDate();d++){
   const v=iso(new Date(y,m,d)),n=notes.find(x=>x.date===v),c=document.createElement("button");
   c.className="cd"+(v===t?" t":"");c.textContent=d;c.setAttribute("aria-label",v+(n?" has a note":""));
-  if(n){const i=document.createElement("i");i.style.background=col(n.color);c.appendChild(i)}
+  if(n){
+   const i=document.createElement("i");i.style.background=col(n.color);
+   const ts=getTaskStats(n.text);
+   if(ts.total>0&&ts.done===ts.total)i.style.boxShadow="0 0 0 2px #27ae60";
+   c.appendChild(i);
+  }
   c.onclick=()=>make(v);g.appendChild(c)}}
 
 function setView(v){const c=v==="cal";$("board").style.display=c?"none":"";$("chips").style.display=c?"none":"";$("cal").style.display=c?"":"none";
  $("vb").setAttribute("aria-pressed",!c);$("vc").setAttribute("aria-pressed",c)}
+
+function updateTaskUI(){
+ if(!cur)return;
+ const ts=getTaskStats(cur.text);
+ const wrap=$("taskProgressWrap"),fill=$("taskProgressFill"),lbl=$("taskProgressLabel"),badge=$("tabCheckBadge");
+ if(ts.total>0){
+  wrap.style.display="flex";
+  const pct=Math.round((ts.done/ts.total)*100);
+  fill.style.width=pct+"%";
+  lbl.textContent=`${ts.done} of ${ts.total} tasks completed (${pct}%)`;
+  badge.style.display="inline-block";
+  badge.textContent=`${ts.done}/${ts.total}`;
+  badge.className="task-pill"+(ts.done===ts.total?" all-done":"");
+ }else{
+  wrap.style.display="none";
+  badge.style.display="none";
+ }
+}
+
+function setNoteMode(mode){
+ currentViewMode=mode;
+ const isWrite=mode==="write";
+ $("tabWrite").classList.toggle("active",isWrite);
+ $("tabWrite").setAttribute("aria-selected",isWrite);
+ $("tabCheck").classList.toggle("active",!isWrite);
+ $("tabCheck").setAttribute("aria-selected",!isWrite);
+ 
+ $("editorWrap").style.display=isWrite?"block":"none";
+ $("sheetTools").style.display=isWrite?"flex":"none";
+ $("checklistWrap").style.display=isWrite?"none":"block";
+
+ if(!isWrite){
+  renderInteractiveTasks();
+  $("quickTaskInput").focus();
+ }else{
+  $("text").value=cur.text;
+  $("text").focus();
+ }
+ updateTaskUI();
+}
 
 function open(id){
  cur=notes.find(n=>n.id===id);if(!cur)return;
@@ -253,9 +474,17 @@ function open(id){
  $("title").textContent=dt.toLocaleDateString("en",{day:"numeric",month:"long",year:"numeric"});
  $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
  $("text").value=cur.text;$("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
+ updateTaskUI();
+ setNoteMode("write");
  $("home").classList.remove("open");$("detail").classList.add("open");$("text").focus();window.scrollTo(0,0)}
 
-function stat(msg){const w=cur.text.trim()?cur.text.trim().split(/\s+/).length:0;$("saved").textContent=(msg||"")+(msg?" · ":"")+w+" words"}
+function stat(msg){
+ const w=cur.text.trim()?cur.text.trim().split(/\s+/).length:0;
+ const ts=getTaskStats(cur.text);
+ let info=(msg||"")+(msg?" · ":"")+w+" words";
+ if(ts.total>0)info+=` · ${ts.done}/${ts.total} done`;
+ $("saved").textContent=info;
+}
 
 function paint(){
  $("sheet").style.background=col(cur.color);
@@ -265,8 +494,330 @@ function paint(){
   d.setAttribute("aria-label","Color "+(i+1));d.setAttribute("aria-pressed",cur.color===i);
   d.onclick=()=>{cur.color=i;save();paint()};$("colors").appendChild(d)}}
 
+/* --- Interactive Checklist Rendering --- */
+function renderInteractiveTasks(){
+ const container=$("taskList");container.innerHTML="";
+ if(!cur||!cur.text.trim()){
+  container.innerHTML='<div style="text-align:center;padding:34px 10px;opacity:.65">No tasks yet. Add a task below or switch back to Write mode!</div>';
+  return;
+ }
+ const lines=cur.text.split("\n");
+ let renderedCount=0;
+ lines.forEach((line,idx)=>{
+  const isTask=/^\s*(?:-\s*)?\[([ xX])\]\s*(.*)$/.exec(line);
+  const row=document.createElement("div");
+  if(isTask){
+   renderedCount++;
+   const isDone=isTask[1].toLowerCase()==="x";
+   const text=isTask[2];
+   row.className="task-row"+(isDone?" done":"");
+   
+   const checkBtn=document.createElement("button");
+   checkBtn.type="button";checkBtn.className="task-check-btn";
+   checkBtn.setAttribute("aria-checked",isDone);
+   checkBtn.setAttribute("aria-label",isDone?"Mark task pending":"Mark task completed");
+   checkBtn.innerHTML=isDone?"✓":"";
+   checkBtn.onclick=()=>{
+    const nlines=cur.text.split("\n");
+    const m=/^\s*(?:-\s*)?\[([ xX])\]\s*(.*)$/.exec(nlines[idx]);
+    if(m){
+     const wasDone=m[1].toLowerCase()==="x";
+     nlines[idx]=nlines[idx].replace(/\[([ xX])\]/,wasDone?"[ ]":"[x]");
+     cur.text=nlines.join("\n");
+     $("text").value=cur.text;
+     debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+    }
+   };
+
+   const tspan=document.createElement("span");
+   tspan.className="task-text";
+   tspan.textContent=text||"Untitled task";
+
+   const delBtn=document.createElement("button");
+   delBtn.type="button";delBtn.className="task-del-btn";
+   delBtn.innerHTML="&times;";delBtn.title="Delete task line";
+   delBtn.onclick=()=>{
+    const nlines=cur.text.split("\n");
+    nlines.splice(idx,1);
+    cur.text=nlines.join("\n");
+    $("text").value=cur.text;
+    debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+   };
+
+   row.appendChild(checkBtn);
+   row.appendChild(tspan);
+   row.appendChild(delBtn);
+   container.appendChild(row);
+  }else if(line.trim().length>0){
+   renderedCount++;
+   row.className="task-row text-row";
+   const tspan=document.createElement("span");
+   tspan.className="task-text";
+   tspan.textContent=line;
+   row.appendChild(tspan);
+   container.appendChild(row);
+  }
+ });
+ if(!renderedCount){
+  container.innerHTML='<div style="text-align:center;padding:34px 10px;opacity:.65">No tasks found. Use the box below to add one!</div>';
+ }
+}
+
+function addQuickTask(txt){
+ const val=(txt||$("quickTaskInput").value).trim();
+ if(!val)return;
+ const prefix=cur.text.length&&!cur.text.endsWith("\n")?"\n":"";
+ cur.text+=prefix+"- [ ] "+val+"\n";
+ $("text").value=cur.text;
+ $("quickTaskInput").value="";
+ debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+}
+
+function toggleCheckboxSelection(forceCheck=null){
+ const el=$("text");
+ const start=el.selectionStart,end=el.selectionEnd,val=el.value;
+ const lastNl=val.lastIndexOf("\n",start-1);
+ const lineStart=lastNl===-1?0:lastNl+1;
+ let nextNl=val.indexOf("\n",end);
+ if(nextNl===-1)nextNl=val.length;
+
+ const lines=val.substring(lineStart,nextNl).split("\n");
+ const modified=lines.map(line=>{
+  if(forceCheck===true){
+   if(/^\s*(?:-\s*)?\[[ xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[ xX]\]\s*/,"$1- [x] ");
+   return "- [x] "+line;
+  }
+  if(forceCheck===false){
+   if(/^\s*(?:-\s*)?\[[ xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[ xX]\]\s*/,"$1- [ ] ");
+   return "- [ ] "+line;
+  }
+  // Toggle: unchecked -> checked -> none -> unchecked
+  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1- [x] ");
+  if(/^\s*(?:-\s*)?\[[xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[xX]\]\s*/,"$1");
+  return "- [ ] "+line;
+ });
+
+ const rep=modified.join("\n");
+ el.value=val.substring(0,lineStart)+rep+val.substring(nextNl);
+ el.selectionStart=lineStart;
+ el.selectionEnd=lineStart+rep.length;
+ cur.text=el.value;
+ debouncedSave();updateTaskUI();stat();
+}
+
+function insertTextAtCursor(snippet){
+ const el=$("text");
+ const start=el.selectionStart,end=el.selectionEnd,val=el.value;
+ el.value=val.substring(0,start)+snippet+val.substring(end);
+ el.selectionStart=el.selectionEnd=start+snippet.length;
+ el.focus();
+ cur.text=el.value;
+ debouncedSave();updateTaskUI();stat();
+}
+
+/* --- Smart Typing in Textarea --- */
+$("text").addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){
+  const el=e.target,pos=el.selectionStart,val=el.value;
+  const lastNl=val.lastIndexOf("\n",pos-1);
+  const lineStart=lastNl===-1?0:lastNl+1;
+  const curLine=val.substring(lineStart,pos);
+
+  // Check for checklist: "- [ ] ", "- [x] ", "[ ] ", "[x] "
+  const chkMatch=curLine.match(/^(\s*)(?:-\s*)?(\[[ xX]\])\s*(.*)$/);
+  if(chkMatch){
+   e.preventDefault();
+   const indent=chkMatch[1]||"",content=chkMatch[3]||"";
+   if(!content.trim()){
+    // Empty checklist line: remove prefix on Enter
+    const lineEnd=val.indexOf("\n",pos);
+    const endPos=lineEnd===-1?val.length:lineEnd;
+    el.value=val.substring(0,lineStart)+val.substring(endPos);
+    el.selectionStart=el.selectionEnd=lineStart;
+   }else{
+    // Continue checklist item
+    const ins="\n"+indent+"- [ ] ";
+    const afterPos=val.substring(pos);
+    el.value=val.substring(0,pos)+ins+afterPos;
+    el.selectionStart=el.selectionEnd=pos+ins.length;
+   }
+   cur.text=el.value;debouncedSave();updateTaskUI();stat();
+   return;
+  }
+
+  // Bullet list: "• ", "- ", "* "
+  const bltMatch=curLine.match(/^(\s*)([•\-\*]\s+)(.*)$/);
+  if(bltMatch){
+   e.preventDefault();
+   const indent=bltMatch[1]||"",marker=bltMatch[2],content=bltMatch[3]||"";
+   if(!content.trim()){
+    const lineEnd=val.indexOf("\n",pos);
+    const endPos=lineEnd===-1?val.length:lineEnd;
+    el.value=val.substring(0,lineStart)+val.substring(endPos);
+    el.selectionStart=el.selectionEnd=lineStart;
+   }else{
+    const ins="\n"+indent+marker;
+    el.value=val.substring(0,pos)+ins+val.substring(pos);
+    el.selectionStart=el.selectionEnd=pos+ins.length;
+   }
+   cur.text=el.value;debouncedSave();stat();
+   return;
+  }
+
+  // Numbered list: "1. ", "2. ", etc.
+  const numMatch=curLine.match(/^(\s*)(\d+)\.\s+(.*)$/);
+  if(numMatch){
+   e.preventDefault();
+   const indent=numMatch[1]||"",num=parseInt(numMatch[2],10),content=numMatch[3]||"";
+   if(!content.trim()){
+    const lineEnd=val.indexOf("\n",pos);
+    const endPos=lineEnd===-1?val.length:lineEnd;
+    el.value=val.substring(0,lineStart)+val.substring(endPos);
+    el.selectionStart=el.selectionEnd=lineStart;
+   }else{
+    const ins="\n"+indent+(num+1)+". ";
+    el.value=val.substring(0,pos)+ins+val.substring(pos);
+    el.selectionStart=el.selectionEnd=pos+ins.length;
+   }
+   cur.text=el.value;debouncedSave();stat();
+   return;
+  }
+ }
+
+ // Shortcut: Ctrl+Shift+C to toggle checkbox
+ if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==="c"||e.key==="C")){
+  e.preventDefault();toggleCheckboxSelection();
+ }
+
+ // Tab key indents
+ if(e.key==="Tab"){
+  e.preventDefault();
+  const start=e.target.selectionStart,val=e.target.value;
+  e.target.value=val.substring(0,start)+"  "+val.substring(e.target.selectionEnd);
+  e.target.selectionStart=e.target.selectionEnd=start+2;
+  cur.text=e.target.value;debouncedSave();
+ }
+});
+
+// Auto-convert typed shortcuts like "[] " into "- [ ] "
+$("text").addEventListener("input",e=>{
+ const el=e.target,pos=el.selectionStart,val=el.value;
+ const prefix=val.substring(0,pos);
+ if(prefix.endsWith("[] ")||prefix.endsWith("[ ] ")){
+  const isShort=prefix.endsWith("[] ");
+  const matchPos=pos-(isShort?3:4);
+  const lastNl=val.lastIndexOf("\n",matchPos-1);
+  const lineStart=lastNl===-1?0:lastNl+1;
+  const beforeMatch=val.substring(lineStart,matchPos);
+  if(beforeMatch.trim()===""||beforeMatch.trim()==="-"){
+   const newVal=val.substring(0,lineStart)+(beforeMatch.startsWith("  ")?beforeMatch:"")+"- [ ] "+val.substring(pos);
+   el.value=newVal;
+   const newPos=lineStart+(beforeMatch.startsWith("  ")?beforeMatch.length:0)+6;
+   el.selectionStart=el.selectionEnd=newPos;
+  }
+ }
+ cur.text=el.value;debouncedSave();updateTaskUI();stat();
+});
+
+/* --- UI Buttons & Actions --- */
+$("tabWrite").onclick=()=>setNoteMode("write");
+$("tabCheck").onclick=()=>setNoteMode("check");
+$("btnAddCheck").onclick=()=>toggleCheckboxSelection();
+$("btnTickDone").onclick=()=>toggleCheckboxSelection(true);
+$("btnAddBullet").onclick=()=>{
+ const el=$("text"),pos=el.selectionStart,val=el.value;
+ const lastNl=val.lastIndexOf("\n",pos-1),lineStart=lastNl===-1?0:lastNl+1;
+ if(val.substring(lineStart,pos).trim()===""){insertTextAtCursor("• ")}else{insertTextAtCursor("\n• ")}
+};
+$("btnAddNum").onclick=()=>{
+ const el=$("text"),pos=el.selectionStart,val=el.value;
+ const lastNl=val.lastIndexOf("\n",pos-1),lineStart=lastNl===-1?0:lastNl+1;
+ if(val.substring(lineStart,pos).trim()===""){insertTextAtCursor("1. ")}else{insertTextAtCursor("\n1. ")}
+};
+$("btnAddTime").onclick=()=>{
+ const tstr=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+ insertTextAtCursor(`[${tstr}] `);
+};
+
+// Copy Note text
+$("btnCopyNote").onclick=()=>{
+ if(!cur||!cur.text){showToast("Note is empty");return}
+ const fullText=(cur.title?cur.title+"\n\n":"")+cur.text;
+ navigator.clipboard.writeText(fullText).then(()=>showToast("✓ Copied note to clipboard!"));
+};
+
+// Export Note as text file
+$("btnExportNote").onclick=()=>{
+ if(!cur){return}
+ const fullText=`# Date: ${cur.date}\n${cur.title?'# Title: '+cur.title+'\n':''}${cur.tags.length?'# Tags: '+cur.tags.join(', ')+'\n':''}\n${cur.text}`;
+ const blob=new Blob([fullText],{type:"text/markdown;charset=utf-8"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download=`Date-Notes-${cur.date}.md`;
+ a.click();
+ URL.revokeObjectURL(a.href);
+ showToast("📥 Note downloaded!");
+};
+
+// Templates
+const TEMPLATES={
+ todo:"## 🎯 Top Priorities\n- [ ] \n- [ ] \n- [ ] \n\n## 📋 Secondary Tasks\n- [ ] \n- [ ] \n\n## 💭 Notes & Thoughts\n",
+ meeting:"## 💼 Meeting\n- 🕒 Time: \n- 👥 Attendees: \n\n## 📌 Agenda & Notes\n• \n\n## ☑️ Action Items\n- [ ] \n- [ ] \n",
+ shopping:"## 🛒 Groceries & Shopping\n- [ ] Produce & Fruits\n- [ ] Dairy & Bread\n- [ ] Household essentials\n- [ ] \n",
+ habits:"## 🏃 Daily Habits\n- [ ] 💧 Drink 2L water\n- [ ] 🏋️ Exercise / 30m walk\n- [ ] 📖 Read 20 mins\n- [ ] 🧘 Meditate or stretch\n- [ ] 💤 Sleep before 11 PM\n"
+};
+
+$("btnTemplate").onclick=e=>{
+ e.stopPropagation();
+ $("templateMenu").classList.toggle("open");
+};
+
+document.addEventListener("click",()=>{$("templateMenu").classList.remove("open")});
+
+$("templateMenu").addEventListener("click",e=>{
+ const tmpl=e.target.dataset.tmpl;
+ if(tmpl&&TEMPLATES[tmpl]){
+  const append=TEMPLATES[tmpl];
+  const sep=cur.text.trim().length?"\n\n":"";
+  cur.text+=sep+append;
+  $("text").value=cur.text;
+  debouncedSave();updateTaskUI();stat();
+  $("templateMenu").classList.remove("open");
+  showToast("📝 Template inserted!");
+ }
+});
+
+// Checklist actions
+$("quickTaskBtn").onclick=()=>addQuickTask();
+$("quickTaskInput").addEventListener("keydown",e=>{if(e.key==="Enter")addQuickTask()});
+
+$("btnCheckAll").onclick=()=>{
+ if(!cur)return;
+ const lines=cur.text.split("\n").map(l=>/^\s*(?:-\s*)?\[\s\]/.test(l)?l.replace(/\[\s\]/,"[x]"):l);
+ cur.text=lines.join("\n");$("text").value=cur.text;
+ debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+ showToast("✓ All tasks checked!");
+};
+
+$("btnUncheckAll").onclick=()=>{
+ if(!cur)return;
+ const lines=cur.text.split("\n").map(l=>/^\s*(?:-\s*)?\[[xX]\]/.test(l)?l.replace(/\[[xX]\]/,"[ ]"):l);
+ cur.text=lines.join("\n");$("text").value=cur.text;
+ debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+ showToast("☐ All tasks unchecked!");
+};
+
+$("btnClearDone").onclick=()=>{
+ if(!cur)return;
+ if(confirm("Clear all completed tasks from this note?")){
+  const lines=cur.text.split("\n").filter(l=>!/^\s*(?:-\s*)?\[[xX]\]/.test(l));
+  cur.text=lines.join("\n");$("text").value=cur.text;
+  debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
+  showToast("🧹 Completed tasks removed!");
+ }
+};
+
 $("addBtn").onclick=()=>{const v=$("d").value;if(v)make(v)};
-$("text").oninput=e=>{cur.text=e.target.value;debouncedSave()};
 $("ntitle").oninput=e=>{cur.title=e.target.value;debouncedSave()};
 $("ntags").oninput=e=>{cur.tags=[...new Set(e.target.value.split(",").map(x=>x.trim().replace(/^#/,"").toLowerCase()).filter(Boolean))];debouncedSave()};
 $("pin").onclick=()=>{cur.pinned=!cur.pinned;save();paint()};

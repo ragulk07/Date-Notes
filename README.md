@@ -15,6 +15,14 @@
   - AES-GCM 256-bit encryption with PBKDF2 key derivation (250,000 iterations, SHA-256).
   - All notes are encrypted on your device—passwords and plaintexts never leave your browser.
   - Automatic session timeout & lock after 5 minutes of inactivity.
+- ☑️ **Smart Checklists & Interactive Tasks**
+  - **Tick while typing**: Press Enter on any checklist item (- [ ]) to automatically continue with another checkbox! Press Enter on an empty checkbox to cancel.
+  - **Quick conversion**: Type []  to automatically convert to - [ ].
+  - **Interactive Checklist View**: Switch to the ☑️ Checklist tab to click and tick off tasks with live strike-through and completion animations.
+  - **Task Progress Bar**: Live progress bar showing completed tasks (3 of 5 done - 60%).
+  - **Board Task Badges**: Cards on the board show badges (e.g. ✓ 2/5 or ✓ Done) and checklist icons (☐, ☑).
+  - **Filters**: Quickly filter notes with tasks or pending tasks.
+  - **Toolbar actions**: One-click Checkbox, Tick Done, Bullet item, Numbered list, Timestamp (🕒), Note templates (Daily To-Do, Meeting, Shopping, Habits), Copy to clipboard, and Export to Markdown/Text.
 - ☁️ **Free Cloud Sync via GitHub Private Gist**
   - Unlimited storage capacity backed by your own GitHub account (`ragulk07`).
   - Auto-syncs encrypted notes when saving.
