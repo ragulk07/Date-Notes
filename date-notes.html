@@ -23,7 +23,7 @@ input[type=date]{font:inherit;color:var(--ink);background:transparent;border:0;p
 button{font:inherit;cursor:pointer}
 .btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:9px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
 .btn:hover{opacity:.92}
-.btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn:focus-visible,.note:focus-visible,.ghost:focus-visible,.chip:focus-visible,.tool-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:22px}
 .note{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;padding:18px;border-radius:3px 3px 3px 22px;color:var(--noteink);
 display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);transition:transform .15s;position:relative}
@@ -36,9 +36,10 @@ display:flex;flex-direction:column;box-shadow:0 8px 14px -8px rgba(0,0,0,.35);tr
 .page.open{display:block}
 .ghost{background:none;border:0;color:var(--accent);font-weight:600;padding:6px 0;margin-bottom:14px}
 .sheet{border-radius:6px 6px 6px 28px;padding:26px;min-height:60vh;color:var(--noteink);box-shadow:0 14px 28px -14px rgba(0,0,0,.4);position:relative}
-.sheet h2{font:700 2.6rem/1 Caveat,cursive;margin:0 0 4px}
-.sheet .wk{margin:0 0 14px;opacity:.7}
-textarea{width:100%;min-height:42vh;border:0;background:transparent;resize:vertical;font:1.15rem/1.7 Figtree,sans-serif;color:inherit;outline:0;
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
+.sheet h2{font:700 2.6rem/1 Caveat,cursive;margin:0 0 2px}
+.sheet .wk{margin:0 0 12px;opacity:.7}
+textarea{width:100%;min-height:44vh;border:0;background:transparent;resize:vertical;font:1.15rem/1.7 Figtree,sans-serif;color:inherit;outline:0;
 background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1.7em calc(1.7em + 1px))}
 .bar{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-top:14px;font-size:.9rem}
 .colors{display:flex;gap:8px}
@@ -92,48 +93,13 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 .modal.open{display:flex}
 .sync-badge{font-size:.78rem;color:var(--muted);margin-left:6px;font-weight:normal}
 
-/* --- Note Toolbar & Checklist Enhancements --- */
-.sheet-nav{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(0,0,0,.08);padding-bottom:10px}
-.view-tabs{display:inline-flex;background:rgba(0,0,0,.09);padding:3px;border-radius:10px;gap:3px}
-.tab-btn{background:none;border:0;color:inherit;padding:5px 13px;border-radius:7px;font-weight:600;font-size:.88rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
-.tab-btn.active{background:rgba(255,255,255,.95);box-shadow:0 1px 4px rgba(0,0,0,.15);color:var(--noteink)}
-.task-pill{background:var(--accent);color:#fff;border-radius:99px;padding:1px 7px;font-size:.72rem;font-weight:700}
-.task-pill.all-done{background:#27ae60}
-.note-actions{display:flex;gap:6px;align-items:center}
-.sheet-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px}
-.tool-btn{background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:5px 10px;font-size:.84rem;font-weight:600;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;line-height:1.2}
-.tool-btn:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+/* --- Clean, Simple Note Toolbar --- */
+.note-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 8px}
+.tool-btn{background:rgba(255,255,255,.58);border:1px solid rgba(0,0,0,.13);border-radius:8px;padding:5px 11px;font-size:.85rem;font-weight:600;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s}
+.tool-btn:hover{background:rgba(255,255,255,.95);transform:translateY(-1px);box-shadow:0 2px 5px rgba(0,0,0,.1)}
 .tool-btn:active{transform:translateY(0)}
-
-/* Progress Bar */
-.task-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px;background:rgba(255,255,255,.4);padding:6px 12px;border-radius:8px}
-.progress-track{flex:1;height:8px;background:rgba(0,0,0,.1);border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .25s ease}
-.progress-label{font-size:.82rem;font-weight:600;opacity:.85;white-space:nowrap}
-
-/* Interactive Checklist Mode */
-.interactive-tasks{min-height:38vh;display:flex;flex-direction:column;gap:6px;padding:4px 0}
-.task-row{display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.4);transition:all .15s}
-.task-row:hover{background:rgba(255,255,255,.7)}
-.task-row.text-row{background:transparent;padding:4px 10px;opacity:.85;font-style:italic}
-.task-check-btn{width:22px;height:22px;border:2px solid currentColor;border-radius:6px;background:rgba(255,255,255,.8);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;margin-top:2px;font-weight:bold;font-size:.85rem;line-height:1;transition:all .15s}
-.task-check-btn[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
-.task-text{flex:1;font-size:1.1rem;line-height:1.45;word-break:break-word}
-.task-row.done .task-text{text-decoration:line-through;opacity:.55}
-.task-del-btn{background:none;border:0;color:inherit;opacity:.35;font-size:1.15rem;cursor:pointer;padding:0 4px;line-height:1;border-radius:4px}
-.task-del-btn:hover{opacity:.95;color:#c0392b}
-
-/* Quick Add Task Input */
-.quick-add-wrap{display:flex;gap:8px;align-items:center;margin-top:10px}
-.quick-add-wrap input{flex:1;border:1px dashed rgba(0,0,0,.25);background:rgba(255,255,255,.5);border-radius:8px;padding:8px 12px;font:inherit;color:inherit;outline:0}
-.quick-add-wrap input:focus{border-style:solid;border-color:currentColor;background:rgba(255,255,255,.85)}
-
-/* Dropdown Menu */
-.dropdown{position:relative;display:inline-block}
-.dropdown-menu{display:none;position:absolute;top:100%;left:0;margin-top:4px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);z-index:25;min-width:180px;padding:5px;flex-direction:column}
-.dropdown-menu.open{display:flex}
-.dropdown-menu button{all:unset;padding:8px 12px;font-size:.85rem;font-weight:600;color:var(--ink);cursor:pointer;border-radius:6px;text-align:left}
-.dropdown-menu button:hover{background:var(--bg)}
+.task-pill{background:var(--accent);color:#fff;border-radius:99px;padding:3px 10px;font-size:.78rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.task-pill.all-done{background:#27ae60}
 
 /* Toast feedback */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.22);padding:9px 20px;border-radius:99px;font-size:.88rem;font-weight:600;z-index:99;opacity:0;transition:transform .2s ease, opacity .2s ease;pointer-events:none}
@@ -176,63 +142,31 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
  <section class="page" id="detail">
   <button class="ghost" id="back">&larr; Back to board</button>
   <div class="sheet" id="sheet">
-   <h2 id="title"></h2><p class="wk" id="wk"></p>
-   <div class="fields"><input id="ntitle" placeholder="Title (optional)" aria-label="Title"><input id="ntags" placeholder="Tags, separated by commas" aria-label="Tags"><button class="pinb" id="pin" aria-pressed="false">Pin note</button></div>
+   <div class="sheet-head">
+    <div>
+     <h2 id="title"></h2>
+     <p class="wk" id="wk"></p>
+    </div>
+    <div id="taskBadge" class="task-pill" style="display:none">0/0</div>
+   </div>
+
+   <div class="fields">
+    <input id="ntitle" placeholder="Title (optional)" aria-label="Title">
+    <input id="ntags" placeholder="Tags, separated by commas" aria-label="Tags">
+    <button class="pinb" id="pin" aria-pressed="false">Pin note</button>
+   </div>
    
-   <!-- Sheet Top Bar (Mode Switcher & Quick Actions) -->
-   <div class="sheet-nav">
-    <div class="view-tabs" role="tablist">
-     <button class="tab-btn active" id="tabWrite" role="tab" aria-selected="true">✏️ Write</button>
-     <button class="tab-btn" id="tabCheck" role="tab" aria-selected="false">☑️ Checklist <span id="tabCheckBadge" class="task-pill" style="display:none">0/0</span></button>
-    </div>
-    <div class="note-actions">
-     <button type="button" class="tool-btn" id="btnCopyNote" title="Copy full note to clipboard">📋 Copy</button>
-     <button type="button" class="tool-btn" id="btnExportNote" title="Download note as file">📥 Export</button>
-    </div>
+   <!-- Simple, beautiful note toolbar -->
+   <div class="note-bar">
+    <button type="button" class="tool-btn" id="btnChecklist" title="Add / toggle checkbox [Ctrl+Enter]">☑ Checklist</button>
+    <button type="button" class="tool-btn" id="btnTick" title="Tick or untick task">✓ Tick</button>
+    <button type="button" class="tool-btn" id="btnBullet" title="Add bullet item">• Bullet</button>
+    <button type="button" class="tool-btn" id="btnTime" title="Insert current time">🕒 Time</button>
+    <button type="button" class="tool-btn" id="btnCopy" title="Copy note text">📋 Copy</button>
+    <button type="button" class="tool-btn" id="btnClearDone" title="Remove completed tasks" style="display:none">🧹 Clear done</button>
    </div>
 
-   <!-- Progress Bar (shown when note has tasks) -->
-   <div class="task-progress" id="taskProgressWrap" style="display:none">
-    <div class="progress-track"><div class="progress-fill" id="taskProgressFill"></div></div>
-    <span class="progress-label" id="taskProgressLabel">0 of 0 tasks done</span>
-   </div>
-
-   <!-- Formatting Toolbar while typing -->
-   <div class="sheet-tools" id="sheetTools">
-    <button type="button" class="tool-btn" id="btnAddCheck" title="Add / Toggle Checkbox (- [ ]) (Ctrl+Shift+C)">☑️ Checkbox</button>
-    <button type="button" class="tool-btn" id="btnTickDone" title="Mark selected line(s) done (- [x])">✓ Tick Done</button>
-    <button type="button" class="tool-btn" id="btnAddBullet" title="Add bullet list item (•)">• Bullet</button>
-    <button type="button" class="tool-btn" id="btnAddNum" title="Add numbered list item (1.)">1. Number</button>
-    <button type="button" class="tool-btn" id="btnAddTime" title="Insert current timestamp">🕒 Time</button>
-    <div class="dropdown">
-     <button type="button" class="tool-btn" id="btnTemplate">📝 Templates ▾</button>
-     <div class="dropdown-menu" id="templateMenu">
-      <button type="button" data-tmpl="todo">📋 Daily To-Do</button>
-      <button type="button" data-tmpl="meeting">💼 Meeting Notes</button>
-      <button type="button" data-tmpl="shopping">🛒 Shopping List</button>
-      <button type="button" data-tmpl="habits">🎯 Daily Habits</button>
-     </div>
-    </div>
-   </div>
-
-   <!-- Text Editor View -->
-   <div id="editorWrap">
-    <textarea id="text" placeholder="Write anything about this day... (Click ☑️ Checkbox or type [ ] to start a checklist)"></textarea>
-   </div>
-
-   <!-- Interactive Checklist View -->
-   <div id="checklistWrap" style="display:none">
-    <div class="interactive-tasks" id="taskList"></div>
-    <div class="quick-add-wrap">
-     <input id="quickTaskInput" placeholder="Add a new task and press Enter..." aria-label="New task">
-     <button type="button" class="btn" id="quickTaskBtn" style="padding:8px 14px">+ Add</button>
-    </div>
-    <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-     <button type="button" class="tool-btn" id="btnCheckAll">✓ Check all</button>
-     <button type="button" class="tool-btn" id="btnUncheckAll">☐ Uncheck all</button>
-     <button type="button" class="tool-btn" id="btnClearDone">🧹 Clear completed</button>
-    </div>
-   </div>
+   <textarea id="text" placeholder="Write anything about this day... (Tap ☑ Checklist to add tasks, or tap [ ] to tick it)"></textarea>
 
    <div class="bar">
     <div class="colors" id="colors" role="group" aria-label="Note color"></div>
@@ -287,7 +221,6 @@ background-image:repeating-linear-gradient(transparent 0 1.7em,rgba(0,0,0,.12) 1
 const KEY="date-notes-v1";let notes=[],cur=null,q="",tag="",cm=new Date();cm.setDate(1);
 const VK="date-notes-vault";const GK="date-notes-gist-cfg";
 let ck=null,salt=null,chain=Promise.resolve();
-let currentViewMode="write"; // 'write' or 'check'
 let filterMode="all"; // 'all', 'tasks', 'pending'
 
 const normalize=n=>{n.title=n.title||"";n.tags=n.tags||[];n.pinned=!!n.pinned};
@@ -318,13 +251,13 @@ $("d").value=iso(new Date());
 
 function showToast(msg){
  const t=$("toast");t.textContent=msg;t.classList.add("show");
- setTimeout(()=>t.classList.remove("show"),2200);
+ setTimeout(()=>t.classList.remove("show"),2000);
 }
 
 function getTaskStats(text){
  if(!text)return{total:0,done:0};
- const matches=text.match(/^\s*(?:-\s*)?\[([ xX])\]/gm)||[];
- const doneMatches=text.match(/^\s*(?:-\s*)?\[([xX])\]/gm)||[];
+ const matches=text.match(/^\s*(?:-\s*)?\[([ xX✓])\]/gm)||[];
+ const doneMatches=text.match(/^\s*(?:-\s*)?\[([xX✓])\]/gm)||[];
  return{total:matches.length,done:doneMatches.length};
 }
 
@@ -338,7 +271,6 @@ function render(){
  
  const chips=$("chips");chips.innerHTML="";
  
- // Standard filter chips: All, ☑️ Tasks, ⏳ Incomplete
  const allChip=document.createElement("button");
  allChip.className="chip";allChip.textContent="All";
  allChip.setAttribute("aria-pressed",!tag&&filterMode==="all");
@@ -346,7 +278,7 @@ function render(){
  chips.appendChild(allChip);
 
  const taskChip=document.createElement("button");
- taskChip.className="chip";taskChip.textContent="☑️ Has Tasks";
+ taskChip.className="chip";taskChip.textContent="☑️ Tasks";
  taskChip.setAttribute("aria-pressed",filterMode==="tasks");
  taskChip.onclick=()=>{tag="";filterMode=filterMode==="tasks"?"all":"tasks";render()};
  chips.appendChild(taskChip);
@@ -394,9 +326,8 @@ function render(){
   if(n.date===t)badgesHtml+='<span class="badge">Today</span>';
   badgesHtml+='</div>';
 
-  // Format preview with check symbols
   let prevText=n.text||"";
-  prevText=prevText.replace(/^\s*(?:-\s*)?\[\s\]\s*/gm,"☐ ").replace(/^\s*(?:-\s*)?\[[xX]\]\s*/gm,"☑ ");
+  prevText=prevText.replace(/^\s*(?:-\s*)?\[\s\]\s*/gm,"☐ ").replace(/^\s*(?:-\s*)?\[[xX✓]\]\s*/gm,"☑ ");
 
   el.innerHTML=`<span class="day">${dt.getDate()}</span><span class="mon">${dt.toLocaleString("en",{month:"long"})} ${dt.getFullYear()}</span>`+
    badgesHtml+
@@ -428,44 +359,20 @@ function renderCal(){
 function setView(v){const c=v==="cal";$("board").style.display=c?"none":"";$("chips").style.display=c?"none":"";$("cal").style.display=c?"":"none";
  $("vb").setAttribute("aria-pressed",!c);$("vc").setAttribute("aria-pressed",c)}
 
-function updateTaskUI(){
+function updateTaskBadge(){
  if(!cur)return;
  const ts=getTaskStats(cur.text);
- const wrap=$("taskProgressWrap"),fill=$("taskProgressFill"),lbl=$("taskProgressLabel"),badge=$("tabCheckBadge");
+ const badge=$("taskBadge"),clearBtn=$("btnClearDone");
  if(ts.total>0){
-  wrap.style.display="flex";
-  const pct=Math.round((ts.done/ts.total)*100);
-  fill.style.width=pct+"%";
-  lbl.textContent=`${ts.done} of ${ts.total} tasks completed (${pct}%)`;
-  badge.style.display="inline-block";
-  badge.textContent=`${ts.done}/${ts.total}`;
+  badge.style.display="inline-flex";
+  badge.textContent=ts.done===ts.total?"✓ All Done":`✓ ${ts.done}/${ts.total}`;
   badge.className="task-pill"+(ts.done===ts.total?" all-done":"");
  }else{
-  wrap.style.display="none";
   badge.style.display="none";
  }
-}
-
-function setNoteMode(mode){
- currentViewMode=mode;
- const isWrite=mode==="write";
- $("tabWrite").classList.toggle("active",isWrite);
- $("tabWrite").setAttribute("aria-selected",isWrite);
- $("tabCheck").classList.toggle("active",!isWrite);
- $("tabCheck").setAttribute("aria-selected",!isWrite);
- 
- $("editorWrap").style.display=isWrite?"block":"none";
- $("sheetTools").style.display=isWrite?"flex":"none";
- $("checklistWrap").style.display=isWrite?"none":"block";
-
- if(!isWrite){
-  renderInteractiveTasks();
-  $("quickTaskInput").focus();
- }else{
-  $("text").value=cur.text;
-  $("text").focus();
+ if(clearBtn){
+  clearBtn.style.display=ts.done>0?"inline-flex":"none";
  }
- updateTaskUI();
 }
 
 function open(id){
@@ -474,8 +381,7 @@ function open(id){
  $("title").textContent=dt.toLocaleDateString("en",{day:"numeric",month:"long",year:"numeric"});
  $("wk").textContent=dt.toLocaleDateString("en",{weekday:"long"});
  $("text").value=cur.text;$("ntitle").value=cur.title;$("ntags").value=cur.tags.join(", ");paint();stat();
- updateTaskUI();
- setNoteMode("write");
+ updateTaskBadge();
  $("home").classList.remove("open");$("detail").classList.add("open");$("text").focus();window.scrollTo(0,0)}
 
 function stat(msg){
@@ -494,128 +400,109 @@ function paint(){
   d.setAttribute("aria-label","Color "+(i+1));d.setAttribute("aria-pressed",cur.color===i);
   d.onclick=()=>{cur.color=i;save();paint()};$("colors").appendChild(d)}}
 
-/* --- Interactive Checklist Rendering --- */
-function renderInteractiveTasks(){
- const container=$("taskList");container.innerHTML="";
- if(!cur||!cur.text.trim()){
-  container.innerHTML='<div style="text-align:center;padding:34px 10px;opacity:.65">No tasks yet. Add a task below or switch back to Write mode!</div>';
-  return;
- }
- const lines=cur.text.split("\n");
- let renderedCount=0;
- lines.forEach((line,idx)=>{
-  const isTask=/^\s*(?:-\s*)?\[([ xX])\]\s*(.*)$/.exec(line);
-  const row=document.createElement("div");
-  if(isTask){
-   renderedCount++;
-   const isDone=isTask[1].toLowerCase()==="x";
-   const text=isTask[2];
-   row.className="task-row"+(isDone?" done":"");
-   
-   const checkBtn=document.createElement("button");
-   checkBtn.type="button";checkBtn.className="task-check-btn";
-   checkBtn.setAttribute("aria-checked",isDone);
-   checkBtn.setAttribute("aria-label",isDone?"Mark task pending":"Mark task completed");
-   checkBtn.innerHTML=isDone?"✓":"";
-   checkBtn.onclick=()=>{
-    const nlines=cur.text.split("\n");
-    const m=/^\s*(?:-\s*)?\[([ xX])\]\s*(.*)$/.exec(nlines[idx]);
-    if(m){
-     const wasDone=m[1].toLowerCase()==="x";
-     nlines[idx]=nlines[idx].replace(/\[([ xX])\]/,wasDone?"[ ]":"[x]");
-     cur.text=nlines.join("\n");
-     $("text").value=cur.text;
-     debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
-    }
-   };
-
-   const tspan=document.createElement("span");
-   tspan.className="task-text";
-   tspan.textContent=text||"Untitled task";
-
-   const delBtn=document.createElement("button");
-   delBtn.type="button";delBtn.className="task-del-btn";
-   delBtn.innerHTML="&times;";delBtn.title="Delete task line";
-   delBtn.onclick=()=>{
-    const nlines=cur.text.split("\n");
-    nlines.splice(idx,1);
-    cur.text=nlines.join("\n");
-    $("text").value=cur.text;
-    debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
-   };
-
-   row.appendChild(checkBtn);
-   row.appendChild(tspan);
-   row.appendChild(delBtn);
-   container.appendChild(row);
-  }else if(line.trim().length>0){
-   renderedCount++;
-   row.className="task-row text-row";
-   const tspan=document.createElement("span");
-   tspan.className="task-text";
-   tspan.textContent=line;
-   row.appendChild(tspan);
-   container.appendChild(row);
-  }
- });
- if(!renderedCount){
-  container.innerHTML='<div style="text-align:center;padding:34px 10px;opacity:.65">No tasks found. Use the box below to add one!</div>';
- }
-}
-
-function addQuickTask(txt){
- const val=(txt||$("quickTaskInput").value).trim();
- if(!val)return;
- const prefix=cur.text.length&&!cur.text.endsWith("\n")?"\n":"";
- cur.text+=prefix+"- [ ] "+val+"\n";
- $("text").value=cur.text;
- $("quickTaskInput").value="";
- debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
-}
-
-function toggleCheckboxSelection(forceCheck=null){
- const el=$("text");
- const start=el.selectionStart,end=el.selectionEnd,val=el.value;
- const lastNl=val.lastIndexOf("\n",start-1);
+/* --- Simple & Good Checklist Actions --- */
+function toggleChecklistLine(){
+ const el=$("text"),pos=el.selectionStart,end=el.selectionEnd,val=el.value;
+ const lastNl=val.lastIndexOf("\n",pos-1);
  const lineStart=lastNl===-1?0:lastNl+1;
  let nextNl=val.indexOf("\n",end);
  if(nextNl===-1)nextNl=val.length;
 
- const lines=val.substring(lineStart,nextNl).split("\n");
- const modified=lines.map(line=>{
-  if(forceCheck===true){
-   if(/^\s*(?:-\s*)?\[[ xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[ xX]\]\s*/,"$1- [x] ");
-   return "- [x] "+line;
+ const currentLines=val.substring(lineStart,nextNl).split("\n");
+ const modified=currentLines.map(line=>{
+  if(!line.trim())return "[ ] ";
+  // Cycle: [ ] -> [✓] -> remove -> [ ]
+  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line)){
+   return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1[✓] ");
   }
-  if(forceCheck===false){
-   if(/^\s*(?:-\s*)?\[[ xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[ xX]\]\s*/,"$1- [ ] ");
-   return "- [ ] "+line;
+  if(/^\s*(?:-\s*)?\[[xX✓]\]\s*/.test(line)){
+   return line.replace(/^(\s*)(?:-\s*)?\[[xX✓]\]\s*/,"$1");
   }
-  // Toggle: unchecked -> checked -> none -> unchecked
-  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1- [x] ");
-  if(/^\s*(?:-\s*)?\[[xX]\]\s*/.test(line))return line.replace(/^(\s*)(?:-\s*)?\[[xX]\]\s*/,"$1");
-  return "- [ ] "+line;
+  if(/^\s*[•\-\*]\s+/.test(line)){
+   return line.replace(/^(\s*)[•\-\*]\s+/,"$1[ ] ");
+  }
+  const ind=line.match(/^(\s*)/)[1]||"";
+  return ind+"[ ] "+line.trimStart();
+ });
+
+ const rep=modified.join("\n");
+ el.value=val.substring(0,lineStart)+rep+val.substring(nextNl);
+ if(currentLines.length===1&&!currentLines[0].trim()){
+  el.selectionStart=el.selectionEnd=lineStart+rep.length;
+ }else{
+  el.selectionStart=lineStart;
+  el.selectionEnd=lineStart+rep.length;
+ }
+ el.focus();
+ cur.text=el.value;
+ debouncedSave();updateTaskBadge();stat();
+}
+
+function tickCurrentTask(){
+ const el=$("text"),pos=el.selectionStart,end=el.selectionEnd,val=el.value;
+ const lastNl=val.lastIndexOf("\n",pos-1);
+ const lineStart=lastNl===-1?0:lastNl+1;
+ let nextNl=val.indexOf("\n",end);
+ if(nextNl===-1)nextNl=val.length;
+
+ const currentLines=val.substring(lineStart,nextNl).split("\n");
+ const modified=currentLines.map(line=>{
+  if(/^\s*(?:-\s*)?\[\s\]\s*/.test(line)){
+   return line.replace(/^(\s*)(?:-\s*)?\[\s\]\s*/,"$1[✓] ");
+  }
+  if(/^\s*(?:-\s*)?\[[xX✓]\]\s*/.test(line)){
+   return line.replace(/^(\s*)(?:-\s*)?\[[xX✓]\]\s*/,"$1[ ] ");
+  }
+  const ind=line.match(/^(\s*)/)[1]||"";
+  return ind+"[✓] "+line.trimStart();
  });
 
  const rep=modified.join("\n");
  el.value=val.substring(0,lineStart)+rep+val.substring(nextNl);
  el.selectionStart=lineStart;
  el.selectionEnd=lineStart+rep.length;
+ el.focus();
  cur.text=el.value;
- debouncedSave();updateTaskUI();stat();
+ debouncedSave();updateTaskBadge();stat();
 }
 
 function insertTextAtCursor(snippet){
- const el=$("text");
- const start=el.selectionStart,end=el.selectionEnd,val=el.value;
- el.value=val.substring(0,start)+snippet+val.substring(end);
- el.selectionStart=el.selectionEnd=start+snippet.length;
+ const el=$("text"),pos=el.selectionStart,val=el.value;
+ el.value=val.substring(0,pos)+snippet+val.substring(el.selectionEnd);
+ el.selectionStart=el.selectionEnd=pos+snippet.length;
  el.focus();
  cur.text=el.value;
- debouncedSave();updateTaskUI();stat();
+ debouncedSave();updateTaskBadge();stat();
 }
 
-/* --- Smart Typing in Textarea --- */
+/* --- Tap / Click directly on [ ] or [✓] to toggle --- */
+$("text").addEventListener("click",e=>{
+ const el=e.target,clickPos=el.selectionStart,val=el.value;
+ const lastNl=val.lastIndexOf("\n",clickPos-1);
+ const lineStart=lastNl===-1?0:lastNl+1;
+ const curLine=val.substring(lineStart);
+ const nextNl=curLine.indexOf("\n");
+ const line=nextNl===-1?curLine:curLine.substring(0,nextNl);
+ 
+ const m=line.match(/^(\s*(?:-\s*)?)(\[[ xX✓]\])\s*/);
+ if(!m)return;
+ 
+ const prefixLen=m[0].length;
+ // If clicked right on the checkbox prefix
+ if(clickPos>=lineStart&&clickPos<=lineStart+prefixLen){
+  const isChecked=/\[[xX✓]\]/.test(m[2]);
+  const newBox=isChecked?"[ ] ":"[✓] ";
+  const newLine=m[1]+newBox+line.substring(prefixLen);
+  const lineEnd=lineStart+line.length;
+  el.value=val.substring(0,lineStart)+newLine+val.substring(lineEnd);
+  el.selectionStart=el.selectionEnd=lineStart+m[1].length+newBox.length;
+  cur.text=el.value;
+  debouncedSave();updateTaskBadge();stat();
+  showToast(isChecked?"Task marked pending":"✓ Task completed!");
+ }
+});
+
+/* --- Smart typing in Textarea --- */
 $("text").addEventListener("keydown",e=>{
  if(e.key==="Enter"&&!e.shiftKey){
   const el=e.target,pos=el.selectionStart,val=el.value;
@@ -623,30 +510,29 @@ $("text").addEventListener("keydown",e=>{
   const lineStart=lastNl===-1?0:lastNl+1;
   const curLine=val.substring(lineStart,pos);
 
-  // Check for checklist: "- [ ] ", "- [x] ", "[ ] ", "[x] "
-  const chkMatch=curLine.match(/^(\s*)(?:-\s*)?(\[[ xX]\])\s*(.*)$/);
+  // Auto-continue checkbox: "[ ] ", "[✓] ", "[x] ", "- [ ] "
+  const chkMatch=curLine.match(/^(\s*)(?:-\s*)?(\[[ xX✓]\])\s*(.*)$/);
   if(chkMatch){
    e.preventDefault();
    const indent=chkMatch[1]||"",content=chkMatch[3]||"";
    if(!content.trim()){
-    // Empty checklist line: remove prefix on Enter
+    // Empty checkbox: remove prefix on Enter
     const lineEnd=val.indexOf("\n",pos);
     const endPos=lineEnd===-1?val.length:lineEnd;
     el.value=val.substring(0,lineStart)+val.substring(endPos);
     el.selectionStart=el.selectionEnd=lineStart;
    }else{
-    // Continue checklist item
-    const ins="\n"+indent+"- [ ] ";
-    const afterPos=val.substring(pos);
-    el.value=val.substring(0,pos)+ins+afterPos;
+    // Add next checkbox item
+    const ins="\n"+indent+"[ ] ";
+    el.value=val.substring(0,pos)+ins+val.substring(pos);
     el.selectionStart=el.selectionEnd=pos+ins.length;
    }
-   cur.text=el.value;debouncedSave();updateTaskUI();stat();
+   cur.text=el.value;debouncedSave();updateTaskBadge();stat();
    return;
   }
 
-  // Bullet list: "• ", "- ", "* "
-  const bltMatch=curLine.match(/^(\s*)([•\-\*]\s+)(.*)$/);
+  // Bullet list: "• ", "- "
+  const bltMatch=curLine.match(/^(\s*)([•\-]\s+)(.*)$/);
   if(bltMatch){
    e.preventDefault();
    const indent=bltMatch[1]||"",marker=bltMatch[2],content=bltMatch[3]||"";
@@ -663,30 +549,12 @@ $("text").addEventListener("keydown",e=>{
    cur.text=el.value;debouncedSave();stat();
    return;
   }
-
-  // Numbered list: "1. ", "2. ", etc.
-  const numMatch=curLine.match(/^(\s*)(\d+)\.\s+(.*)$/);
-  if(numMatch){
-   e.preventDefault();
-   const indent=numMatch[1]||"",num=parseInt(numMatch[2],10),content=numMatch[3]||"";
-   if(!content.trim()){
-    const lineEnd=val.indexOf("\n",pos);
-    const endPos=lineEnd===-1?val.length:lineEnd;
-    el.value=val.substring(0,lineStart)+val.substring(endPos);
-    el.selectionStart=el.selectionEnd=lineStart;
-   }else{
-    const ins="\n"+indent+(num+1)+". ";
-    el.value=val.substring(0,pos)+ins+val.substring(pos);
-    el.selectionStart=el.selectionEnd=pos+ins.length;
-   }
-   cur.text=el.value;debouncedSave();stat();
-   return;
-  }
  }
 
- // Shortcut: Ctrl+Shift+C to toggle checkbox
- if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==="c"||e.key==="C")){
-  e.preventDefault();toggleCheckboxSelection();
+ // Shortcut: Ctrl+Enter or Alt+T or Ctrl+Shift+C to toggle checkbox
+ if(((e.ctrlKey||e.metaKey)&&e.key==="Enter")||(e.altKey&&(e.key==="t"||e.key==="T"))||((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==="c"||e.key==="C"))){
+  e.preventDefault();
+  toggleChecklistLine();
  }
 
  // Tab key indents
@@ -699,7 +567,7 @@ $("text").addEventListener("keydown",e=>{
  }
 });
 
-// Auto-convert typed shortcuts like "[] " into "- [ ] "
+// Auto-convert typed "[] " or "[ ] " into "[ ] "
 $("text").addEventListener("input",e=>{
  const el=e.target,pos=el.selectionStart,val=el.value;
  const prefix=val.substring(0,pos);
@@ -710,110 +578,39 @@ $("text").addEventListener("input",e=>{
   const lineStart=lastNl===-1?0:lastNl+1;
   const beforeMatch=val.substring(lineStart,matchPos);
   if(beforeMatch.trim()===""||beforeMatch.trim()==="-"){
-   const newVal=val.substring(0,lineStart)+(beforeMatch.startsWith("  ")?beforeMatch:"")+"- [ ] "+val.substring(pos);
+   const newVal=val.substring(0,lineStart)+(beforeMatch.startsWith("  ")?beforeMatch:"")+"[ ] "+val.substring(pos);
    el.value=newVal;
-   const newPos=lineStart+(beforeMatch.startsWith("  ")?beforeMatch.length:0)+6;
+   const newPos=lineStart+(beforeMatch.startsWith("  ")?beforeMatch.length:0)+4;
    el.selectionStart=el.selectionEnd=newPos;
   }
  }
- cur.text=el.value;debouncedSave();updateTaskUI();stat();
+ cur.text=el.value;debouncedSave();updateTaskBadge();stat();
 });
 
-/* --- UI Buttons & Actions --- */
-$("tabWrite").onclick=()=>setNoteMode("write");
-$("tabCheck").onclick=()=>setNoteMode("check");
-$("btnAddCheck").onclick=()=>toggleCheckboxSelection();
-$("btnTickDone").onclick=()=>toggleCheckboxSelection(true);
-$("btnAddBullet").onclick=()=>{
+/* --- Toolbar Buttons --- */
+$("btnChecklist").onclick=toggleChecklistLine;
+$("btnTick").onclick=tickCurrentTask;
+$("btnBullet").onclick=()=>{
  const el=$("text"),pos=el.selectionStart,val=el.value;
  const lastNl=val.lastIndexOf("\n",pos-1),lineStart=lastNl===-1?0:lastNl+1;
  if(val.substring(lineStart,pos).trim()===""){insertTextAtCursor("• ")}else{insertTextAtCursor("\n• ")}
 };
-$("btnAddNum").onclick=()=>{
- const el=$("text"),pos=el.selectionStart,val=el.value;
- const lastNl=val.lastIndexOf("\n",pos-1),lineStart=lastNl===-1?0:lastNl+1;
- if(val.substring(lineStart,pos).trim()===""){insertTextAtCursor("1. ")}else{insertTextAtCursor("\n1. ")}
-};
-$("btnAddTime").onclick=()=>{
+$("btnTime").onclick=()=>{
  const tstr=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
  insertTextAtCursor(`[${tstr}] `);
 };
-
-// Copy Note text
-$("btnCopyNote").onclick=()=>{
+$("btnCopy").onclick=()=>{
  if(!cur||!cur.text){showToast("Note is empty");return}
  const fullText=(cur.title?cur.title+"\n\n":"")+cur.text;
  navigator.clipboard.writeText(fullText).then(()=>showToast("✓ Copied note to clipboard!"));
 };
-
-// Export Note as text file
-$("btnExportNote").onclick=()=>{
- if(!cur){return}
- const fullText=`# Date: ${cur.date}\n${cur.title?'# Title: '+cur.title+'\n':''}${cur.tags.length?'# Tags: '+cur.tags.join(', ')+'\n':''}\n${cur.text}`;
- const blob=new Blob([fullText],{type:"text/markdown;charset=utf-8"});
- const a=document.createElement("a");
- a.href=URL.createObjectURL(blob);
- a.download=`Date-Notes-${cur.date}.md`;
- a.click();
- URL.revokeObjectURL(a.href);
- showToast("📥 Note downloaded!");
-};
-
-// Templates
-const TEMPLATES={
- todo:"## 🎯 Top Priorities\n- [ ] \n- [ ] \n- [ ] \n\n## 📋 Secondary Tasks\n- [ ] \n- [ ] \n\n## 💭 Notes & Thoughts\n",
- meeting:"## 💼 Meeting\n- 🕒 Time: \n- 👥 Attendees: \n\n## 📌 Agenda & Notes\n• \n\n## ☑️ Action Items\n- [ ] \n- [ ] \n",
- shopping:"## 🛒 Groceries & Shopping\n- [ ] Produce & Fruits\n- [ ] Dairy & Bread\n- [ ] Household essentials\n- [ ] \n",
- habits:"## 🏃 Daily Habits\n- [ ] 💧 Drink 2L water\n- [ ] 🏋️ Exercise / 30m walk\n- [ ] 📖 Read 20 mins\n- [ ] 🧘 Meditate or stretch\n- [ ] 💤 Sleep before 11 PM\n"
-};
-
-$("btnTemplate").onclick=e=>{
- e.stopPropagation();
- $("templateMenu").classList.toggle("open");
-};
-
-document.addEventListener("click",()=>{$("templateMenu").classList.remove("open")});
-
-$("templateMenu").addEventListener("click",e=>{
- const tmpl=e.target.dataset.tmpl;
- if(tmpl&&TEMPLATES[tmpl]){
-  const append=TEMPLATES[tmpl];
-  const sep=cur.text.trim().length?"\n\n":"";
-  cur.text+=sep+append;
-  $("text").value=cur.text;
-  debouncedSave();updateTaskUI();stat();
-  $("templateMenu").classList.remove("open");
-  showToast("📝 Template inserted!");
- }
-});
-
-// Checklist actions
-$("quickTaskBtn").onclick=()=>addQuickTask();
-$("quickTaskInput").addEventListener("keydown",e=>{if(e.key==="Enter")addQuickTask()});
-
-$("btnCheckAll").onclick=()=>{
- if(!cur)return;
- const lines=cur.text.split("\n").map(l=>/^\s*(?:-\s*)?\[\s\]/.test(l)?l.replace(/\[\s\]/,"[x]"):l);
- cur.text=lines.join("\n");$("text").value=cur.text;
- debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
- showToast("✓ All tasks checked!");
-};
-
-$("btnUncheckAll").onclick=()=>{
- if(!cur)return;
- const lines=cur.text.split("\n").map(l=>/^\s*(?:-\s*)?\[[xX]\]/.test(l)?l.replace(/\[[xX]\]/,"[ ]"):l);
- cur.text=lines.join("\n");$("text").value=cur.text;
- debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
- showToast("☐ All tasks unchecked!");
-};
-
 $("btnClearDone").onclick=()=>{
  if(!cur)return;
- if(confirm("Clear all completed tasks from this note?")){
-  const lines=cur.text.split("\n").filter(l=>!/^\s*(?:-\s*)?\[[xX]\]/.test(l));
+ if(confirm("Remove all completed tasks from this note?")){
+  const lines=cur.text.split("\n").filter(l=>!/^\s*(?:-\s*)?\[[xX✓]\]/.test(l));
   cur.text=lines.join("\n");$("text").value=cur.text;
-  debouncedSave();updateTaskUI();stat();renderInteractiveTasks();
-  showToast("🧹 Completed tasks removed!");
+  debouncedSave();updateTaskBadge();stat();
+  showToast("🧹 Completed tasks cleared!");
  }
 };
 
